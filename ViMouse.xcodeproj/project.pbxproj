@@ -1,0 +1,514 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */; };
+		FB6B6BE71B5B57C6006E606C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE61B5B57C6006E606C /* ViewController.swift */; };
+		FB6B6BEA1B5B57C6006E606C /* ViMouse.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE81B5B57C6006E606C /* ViMouse.xcdatamodeld */; };
+		FB6B6BEC1B5B57C6006E606C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */; };
+		FB6B6BEF1B5B57C6006E606C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB6B6BED1B5B57C6006E606C /* Main.storyboard */; };
+		FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BF91B5B57C6006E606C /* ViMouseTests.swift */; };
+		FB6B6C051B5B57C6006E606C /* ViMouseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6C041B5B57C6006E606C /* ViMouseUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FB6B6BF61B5B57C6006E606C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB6B6BD91B5B57C6006E606C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB6B6BE01B5B57C6006E606C;
+			remoteInfo = ViMouse;
+		};
+		FB6B6C011B5B57C6006E606C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB6B6BD91B5B57C6006E606C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB6B6BE01B5B57C6006E606C;
+			remoteInfo = ViMouse;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		FB6B6BE11B5B57C6006E606C /* ViMouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViMouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FB6B6BE61B5B57C6006E606C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FB6B6BE91B5B57C6006E606C /* ViMouse.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ViMouse.xcdatamodel; sourceTree = "<group>"; };
+		FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FB6B6BEE1B5B57C6006E606C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FB6B6BF01B5B57C6006E606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB6B6BF51B5B57C6006E606C /* ViMouseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ViMouseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB6B6BF91B5B57C6006E606C /* ViMouseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViMouseTests.swift; sourceTree = "<group>"; };
+		FB6B6BFB1B5B57C6006E606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB6B6C001B5B57C6006E606C /* ViMouseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ViMouseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB6B6C041B5B57C6006E606C /* ViMouseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViMouseUITests.swift; sourceTree = "<group>"; };
+		FB6B6C061B5B57C6006E606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FB6B6BDE1B5B57C6006E606C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB6B6BF21B5B57C6006E606C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB6B6BFD1B5B57C6006E606C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FB6B6BD81B5B57C6006E606C = {
+			isa = PBXGroup;
+			children = (
+				FB6B6BE31B5B57C6006E606C /* ViMouse */,
+				FB6B6BF81B5B57C6006E606C /* ViMouseTests */,
+				FB6B6C031B5B57C6006E606C /* ViMouseUITests */,
+				FB6B6BE21B5B57C6006E606C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FB6B6BE21B5B57C6006E606C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FB6B6BE11B5B57C6006E606C /* ViMouse.app */,
+				FB6B6BF51B5B57C6006E606C /* ViMouseTests.xctest */,
+				FB6B6C001B5B57C6006E606C /* ViMouseUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FB6B6BE31B5B57C6006E606C /* ViMouse */ = {
+			isa = PBXGroup;
+			children = (
+				FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */,
+				FB6B6BE61B5B57C6006E606C /* ViewController.swift */,
+				FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */,
+				FB6B6BED1B5B57C6006E606C /* Main.storyboard */,
+				FB6B6BF01B5B57C6006E606C /* Info.plist */,
+				FB6B6BE81B5B57C6006E606C /* ViMouse.xcdatamodeld */,
+			);
+			path = ViMouse;
+			sourceTree = "<group>";
+		};
+		FB6B6BF81B5B57C6006E606C /* ViMouseTests */ = {
+			isa = PBXGroup;
+			children = (
+				FB6B6BF91B5B57C6006E606C /* ViMouseTests.swift */,
+				FB6B6BFB1B5B57C6006E606C /* Info.plist */,
+			);
+			path = ViMouseTests;
+			sourceTree = "<group>";
+		};
+		FB6B6C031B5B57C6006E606C /* ViMouseUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FB6B6C041B5B57C6006E606C /* ViMouseUITests.swift */,
+				FB6B6C061B5B57C6006E606C /* Info.plist */,
+			);
+			path = ViMouseUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FB6B6BE01B5B57C6006E606C /* ViMouse */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB6B6C091B5B57C6006E606C /* Build configuration list for PBXNativeTarget "ViMouse" */;
+			buildPhases = (
+				FB6B6BDD1B5B57C6006E606C /* Sources */,
+				FB6B6BDE1B5B57C6006E606C /* Frameworks */,
+				FB6B6BDF1B5B57C6006E606C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ViMouse;
+			productName = ViMouse;
+			productReference = FB6B6BE11B5B57C6006E606C /* ViMouse.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FB6B6BF41B5B57C6006E606C /* ViMouseTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB6B6C0C1B5B57C6006E606C /* Build configuration list for PBXNativeTarget "ViMouseTests" */;
+			buildPhases = (
+				FB6B6BF11B5B57C6006E606C /* Sources */,
+				FB6B6BF21B5B57C6006E606C /* Frameworks */,
+				FB6B6BF31B5B57C6006E606C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FB6B6BF71B5B57C6006E606C /* PBXTargetDependency */,
+			);
+			name = ViMouseTests;
+			productName = ViMouseTests;
+			productReference = FB6B6BF51B5B57C6006E606C /* ViMouseTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FB6B6BFF1B5B57C6006E606C /* ViMouseUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB6B6C0F1B5B57C6006E606C /* Build configuration list for PBXNativeTarget "ViMouseUITests" */;
+			buildPhases = (
+				FB6B6BFC1B5B57C6006E606C /* Sources */,
+				FB6B6BFD1B5B57C6006E606C /* Frameworks */,
+				FB6B6BFE1B5B57C6006E606C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FB6B6C021B5B57C6006E606C /* PBXTargetDependency */,
+			);
+			name = ViMouseUITests;
+			productName = ViMouseUITests;
+			productReference = FB6B6C001B5B57C6006E606C /* ViMouseUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FB6B6BD91B5B57C6006E606C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "s21g Inc.";
+				TargetAttributes = {
+					FB6B6BE01B5B57C6006E606C = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					FB6B6BF41B5B57C6006E606C = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = FB6B6BE01B5B57C6006E606C;
+					};
+					FB6B6BFF1B5B57C6006E606C = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = FB6B6BE01B5B57C6006E606C;
+					};
+				};
+			};
+			buildConfigurationList = FB6B6BDC1B5B57C6006E606C /* Build configuration list for PBXProject "ViMouse" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FB6B6BD81B5B57C6006E606C;
+			productRefGroup = FB6B6BE21B5B57C6006E606C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FB6B6BE01B5B57C6006E606C /* ViMouse */,
+				FB6B6BF41B5B57C6006E606C /* ViMouseTests */,
+				FB6B6BFF1B5B57C6006E606C /* ViMouseUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FB6B6BDF1B5B57C6006E606C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB6B6BEC1B5B57C6006E606C /* Assets.xcassets in Resources */,
+				FB6B6BEF1B5B57C6006E606C /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB6B6BF31B5B57C6006E606C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB6B6BFE1B5B57C6006E606C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FB6B6BDD1B5B57C6006E606C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB6B6BEA1B5B57C6006E606C /* ViMouse.xcdatamodeld in Sources */,
+				FB6B6BE71B5B57C6006E606C /* ViewController.swift in Sources */,
+				FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB6B6BF11B5B57C6006E606C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB6B6BFC1B5B57C6006E606C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB6B6C051B5B57C6006E606C /* ViMouseUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FB6B6BF71B5B57C6006E606C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB6B6BE01B5B57C6006E606C /* ViMouse */;
+			targetProxy = FB6B6BF61B5B57C6006E606C /* PBXContainerItemProxy */;
+		};
+		FB6B6C021B5B57C6006E606C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB6B6BE01B5B57C6006E606C /* ViMouse */;
+			targetProxy = FB6B6C011B5B57C6006E606C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		FB6B6BED1B5B57C6006E606C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FB6B6BEE1B5B57C6006E606C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FB6B6C071B5B57C6006E606C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FB6B6C081B5B57C6006E606C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FB6B6C0A1B5B57C6006E606C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ViMouse/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FB6B6C0B1B5B57C6006E606C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ViMouse/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		FB6B6C0D1B5B57C6006E606C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ViMouseTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouseTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ViMouse.app/Contents/MacOS/ViMouse";
+			};
+			name = Debug;
+		};
+		FB6B6C0E1B5B57C6006E606C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ViMouseTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouseTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ViMouse.app/Contents/MacOS/ViMouse";
+			};
+			name = Release;
+		};
+		FB6B6C101B5B57C6006E606C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ViMouseUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouseUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = ViMouse;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		FB6B6C111B5B57C6006E606C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ViMouseUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouseUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = ViMouse;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FB6B6BDC1B5B57C6006E606C /* Build configuration list for PBXProject "ViMouse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB6B6C071B5B57C6006E606C /* Debug */,
+				FB6B6C081B5B57C6006E606C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB6B6C091B5B57C6006E606C /* Build configuration list for PBXNativeTarget "ViMouse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB6B6C0A1B5B57C6006E606C /* Debug */,
+				FB6B6C0B1B5B57C6006E606C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FB6B6C0C1B5B57C6006E606C /* Build configuration list for PBXNativeTarget "ViMouseTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB6B6C0D1B5B57C6006E606C /* Debug */,
+				FB6B6C0E1B5B57C6006E606C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FB6B6C0F1B5B57C6006E606C /* Build configuration list for PBXNativeTarget "ViMouseUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB6B6C101B5B57C6006E606C /* Debug */,
+				FB6B6C111B5B57C6006E606C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FB6B6BE81B5B57C6006E606C /* ViMouse.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FB6B6BE91B5B57C6006E606C /* ViMouse.xcdatamodel */,
+			);
+			currentVersion = FB6B6BE91B5B57C6006E606C /* ViMouse.xcdatamodel */;
+			path = ViMouse.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = FB6B6BD91B5B57C6006E606C /* Project object */;
+}
