@@ -10,6 +10,7 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+    var _inputHook = InputHook()
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
@@ -161,11 +162,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidBecomeActive(notification: NSNotification) {
+        _inputHook.disable()
         NSApplication.sharedApplication().mainWindow?.makeKeyAndOrderFront(self);
     }
     
     func applicationDidResignActive(notification: NSNotification) {
-        
+        _inputHook.enable()
     }
 }
 

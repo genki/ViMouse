@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		FB3AD3C61B60718B0058B2E0 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */; };
 		FB3AD3CA1B61DC100058B2E0 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3C91B61DC100058B2E0 /* WindowController.swift */; };
+		FB3AD3D91B6213F30058B2E0 /* Hotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3D81B6213F30058B2E0 /* Hotkey.swift */; };
+		FB3AD3DB1B6216720058B2E0 /* InputHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DA1B6216720058B2E0 /* InputHook.swift */; };
 		FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */; };
 		FB6B6BE71B5B57C6006E606C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE61B5B57C6006E606C /* ViewController.swift */; };
 		FB6B6BEA1B5B57C6006E606C /* ViMouse.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE81B5B57C6006E606C /* ViMouse.xcdatamodeld */; };
@@ -38,6 +40,9 @@
 /* Begin PBXFileReference section */
 		FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		FB3AD3C91B61DC100058B2E0 /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		FB3AD3D11B62112D0058B2E0 /* ViMouse-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViMouse-Bridging-Header.h"; sourceTree = "<group>"; };
+		FB3AD3D81B6213F30058B2E0 /* Hotkey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hotkey.swift; sourceTree = "<group>"; };
+		FB3AD3DA1B6216720058B2E0 /* InputHook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputHook.swift; sourceTree = "<group>"; };
 		FB6B6BE11B5B57C6006E606C /* ViMouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViMouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB6B6BE61B5B57C6006E606C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -106,10 +111,13 @@
 				FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */,
 				FB3AD3C91B61DC100058B2E0 /* WindowController.swift */,
 				FB6B6BE61B5B57C6006E606C /* ViewController.swift */,
+				FB3AD3D81B6213F30058B2E0 /* Hotkey.swift */,
+				FB3AD3DA1B6216720058B2E0 /* InputHook.swift */,
 				FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */,
 				FB6B6BED1B5B57C6006E606C /* Main.storyboard */,
 				FB6B6BF01B5B57C6006E606C /* Info.plist */,
 				FB6B6BE81B5B57C6006E606C /* ViMouse.xcdatamodeld */,
+				FB3AD3D11B62112D0058B2E0 /* ViMouse-Bridging-Header.h */,
 			);
 			path = ViMouse;
 			sourceTree = "<group>";
@@ -194,6 +202,7 @@
 		FB6B6BD91B5B57C6006E606C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "s21g Inc.";
 				TargetAttributes = {
@@ -261,8 +270,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB3AD3D91B6213F30058B2E0 /* Hotkey.swift in Sources */,
 				FB6B6BEA1B5B57C6006E606C /* ViMouse.xcdatamodeld in Sources */,
 				FB3AD3CA1B61DC100058B2E0 /* WindowController.swift in Sources */,
+				FB3AD3DB1B6216720058B2E0 /* InputHook.swift in Sources */,
 				FB6B6BE71B5B57C6006E606C /* ViewController.swift in Sources */,
 				FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */,
 			);
@@ -395,11 +406,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ViMouse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ViMouse/ViMouse-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -407,11 +421,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ViMouse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ViMouse/ViMouse-Bridging-Header.h";
 			};
 			name = Release;
 		};
