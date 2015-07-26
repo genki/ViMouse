@@ -9,25 +9,45 @@
 import Cocoa
 import CoreGraphics
 
+protocol InputHookDelegate {
+    func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool
+}
+
 class InputHook {
     var _port: CFMachPort?
+    var _pressed = Dictionary<Int64, Bool>()
+    var _flags = CGEventFlags(rawValue: 0)
     
-    func keyDown(event: CGEvent){
-        
+    var delegate: InputHookDelegate?
+    
+    func keyDown(event: CGEvent) -> Bool {
+        let keycode = CGEventGetIntegerValueField(event, CGEventField.KeyboardEventKeycode)
+        let pressed = _pressed[keycode]
+        if(pressed == nil){
+            let result = (self.delegate?.handleInput(keycode, _flags!, true))!
+            _pressed[keycode] = result
+            return result
+        }else{
+            return pressed!
+        }
     }
-    func keyUp(event: CGEvent){
-        
+    func keyUp(event: CGEvent) -> Bool {
+        let keycode = CGEventGetIntegerValueField(event, CGEventField.KeyboardEventKeycode)
+        if((_pressed.removeValueForKey(keycode)) != nil){
+            return (self.delegate?.handleInput(keycode, _flags!, false))!
+        }
+        return false
     }
-    func flagChanged(event: CGEvent){
-        
+    func flagsChanged(event: CGEvent){
+        _flags = CGEventGetFlags(event)
     }
     func setup(){
         let callback: CGEventTapCallBack = {(proxy, type, event, arg) -> Unmanaged<CGEvent>? in
             let this = Unmanaged<InputHook>.fromOpaque(COpaquePointer(arg)).takeUnretainedValue()
             switch(type){
-            case .KeyDown: this.keyDown(event)
-            case .KeyUp: this.keyUp(event)
-            case .FlagsChanged: this.flagChanged(event)
+            case .KeyDown: if(this.keyDown(event)){return nil}
+            case .KeyUp: if(this.keyUp(event)){return nil}
+            case .FlagsChanged: this.flagsChanged(event)
             default: break
             }
             return Unmanaged<CGEvent>.passUnretained(event)
