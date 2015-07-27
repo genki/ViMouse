@@ -8,7 +8,6 @@
 
 #import "ViMouse-Bridging-Header.h"
 
-CGEventRef VMCreateMouseWheelEvent(NSInteger count, NSInteger wv, NSInteger wh){
-    return CGEventCreateScrollWheelEvent(nil, kCGScrollEventUnitPixel,
-                                         (uint32_t)count, (int32_t)wv, (int32_t)wh);
+CGEventRef VMCreateMouseWheelEvent(NSInteger wv, NSInteger wh){
+    return CGEventCreateScrollWheelEvent(nil, kCGScrollEventUnitPixel, 2, (int32_t)wv, (int32_t)wh);
 }

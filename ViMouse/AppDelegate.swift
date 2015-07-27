@@ -241,7 +241,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         if(_wheelMode){
             let wv = Int(vy*2)
             let wh = Int(-vx*2)
-            let event = VMCreateMouseWheelEvent(1, wv, wh)
+            let event = VMCreateMouseWheelEvent(wv, wh)
             CGEventPost(CGEventTapLocation.CGHIDEventTap, event.takeUnretainedValue())
             event.release()
             return

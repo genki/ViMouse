@@ -4,4 +4,4 @@
 
 #import <Carbon/Carbon.h>
 
-CGEventRef VMCreateMouseWheelEvent(NSInteger count, NSInteger wv, NSInteger wh);
+CGEventRef VMCreateMouseWheelEvent(NSInteger wv, NSInteger wh);
