@@ -241,7 +241,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         if(_wheelMode){
             let wv = Int(vy*2)
             let wh = Int(-vx*2)
-            let event = VMCreateMouseWheelEvent(2, wv, wh)
+            let event = VMCreateMouseWheelEvent(1, wv, wh)
             CGEventPost(CGEventTapLocation.CGHIDEventTap, event.takeUnretainedValue())
             event.release()
             return
@@ -309,6 +309,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         CGEventSetTimestamp(event, timestamp)
         CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
     }
+    private func reset(){
+        _dx = 0
+        _dy = 0
+        _timestamp = 0
+    }
     private func rawFlag(flag:CGEventFlags) -> UInt64 {return flag.rawValue}
     func move(dx: Int, _ dy: Int, _ flags: CGEventFlags, _ pressed: Bool){
         let ctrl = (flags.rawValue & rawFlag(.FlagMaskControl)) != 0
@@ -322,6 +327,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 default: break
                 }
             }
+            reset()
         }else{
             if(pressed){ _dx += CGFloat(dx); _dy += CGFloat(dy) }
             else{ _dx -= CGFloat(dx); _dy -= CGFloat(dy) }
@@ -363,8 +369,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_Semicolon:
                 if(pressed && flags.rawValue & CGEventFlags.FlagMaskControl.rawValue != 0){
                     NSLog("mouse mode enabled")
-                    _dx = 0
-                    _dy = 0
+                    reset()
                     let op = NSBlockOperation(){self.tick()}
                     _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
                         selector: "main", userInfo: nil, repeats: true)
