@@ -25,11 +25,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _ax:CGFloat = 2.0, _ay:CGFloat = -2.0
     var _timer:NSTimer? = nil
     var _timestamp:CGEventTimestamp = 0
-    var _click_state:Int64 = 0
+    var _click_state:Int64 = 1
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
         _inputHook.delegate = self
+        _inputHook.enable()
+        
+        let statusBar = NSStatusBar.systemStatusBar()
+        let statusBarItem = statusBar.statusItemWithLength(CGFloat(NSVariableStatusItemLength))
+        //statusBarItem!.menu = statusMenu
+        statusBarItem.title = "TestApp"
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -286,7 +292,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
         
         _timestamp = 0
-        _click_state = 0
+        _click_state = 1
     }
     func click(type:CGEventType, _ button:CGMouseButton, _ pressed:Bool){
         let p = NSEvent.mouseLocation()
@@ -299,13 +305,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let timestamp = UInt64(1000000000*GetCurrentEventTime())
         if(pressed){
             if(timestamp - _timestamp < 500000000){
-                CGEventSetIntegerValueField(event, .MouseEventClickState, ++_click_state)
+                ++_click_state
             }else{
-                CGEventSetIntegerValueField(event, .MouseEventClickState, 1)
                 _click_state = 1
             }
             _timestamp = timestamp
         }
+        CGEventSetIntegerValueField(event, .MouseEventClickState, _click_state)
         CGEventSetTimestamp(event, timestamp)
         CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
     }
@@ -313,6 +319,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _dx = 0
         _dy = 0
         _timestamp = 0
+        _click_state = 1
     }
     private func rawFlag(flag:CGEventFlags) -> UInt64 {return flag.rawValue}
     func move(dx: Int, _ dy: Int, _ flags: CGEventFlags, _ pressed: Bool){
@@ -334,6 +341,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }
     }
     func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool{
+        let ctrl = flags.rawValue & rawFlag(.FlagMaskControl) != 0
         if(_timer != nil){
             switch(Int(keycode)){
             case kVK_ANSI_I:
@@ -355,8 +363,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 _leftButton = pressed
                 click(pressed ? .LeftMouseDown : .LeftMouseUp, .Left, pressed)
             case kVK_ANSI_Semicolon:
-                _rightButton = pressed
-                click(pressed ? .RightMouseDown : .RightMouseUp, .Right, pressed)
+                if(!ctrl){
+                    _rightButton = pressed
+                    click(pressed ? .RightMouseDown : .RightMouseUp, .Right, pressed)
+                }
             case kVK_ANSI_N:
                 _centerButton = pressed
                 click(pressed ? .OtherMouseDown : .OtherMouseUp, .Center, pressed)
@@ -364,21 +374,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_P: if(pressed){ paste() }
             default: return false
             }
+            return true
         }else{
             switch(Int(keycode)){
             case kVK_ANSI_Semicolon:
-                if(pressed && flags.rawValue & CGEventFlags.FlagMaskControl.rawValue != 0){
+                if(pressed && ctrl){
                     NSLog("mouse mode enabled")
                     reset()
                     let op = NSBlockOperation(){self.tick()}
                     _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
                         selector: "main", userInfo: nil, repeats: true)
+                    return true
                 }
-                return true
-            default: return false
+            default: break
             }
+            return false
         }
-        return true;
     }
 }
 
