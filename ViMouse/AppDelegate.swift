@@ -194,7 +194,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         CGEventPost(.CGHIDEventTap, event)
     }
     func yank(){ press(kVK_ANSI_C, .FlagMaskCommand) }
-    func paste(){ press(kVK_ANSI_P, .FlagMaskCommand) }
+    func paste(){ press(kVK_ANSI_V, .FlagMaskCommand) }
     func tick(){
         var displayID = CGMainDisplayID()
         var rect = CGDisplayBounds(displayID)
