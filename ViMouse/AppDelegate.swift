@@ -25,6 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _ax:CGFloat = 2.0, _ay:CGFloat = -2.0
     var _timer:NSTimer? = nil
     var _timestamp:CGEventTimestamp = 0
+    var _click_state:Int64 = 0
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
@@ -184,29 +185,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func applicationDidResignActive(notification: NSNotification) {
         _inputHook.enable()
     }
-    func yank(){
-        let src = CGEventSourceCreate(CGEventSourceStateID.HIDSystemState)
-        var event = CGEventCreateKeyboardEvent(src, CGKeyCode(kVK_ANSI_C), true)
-        CGEventSetFlags(event, .FlagMaskCommand)
+    private func press(keycode:Int, _ flags: CGEventFlags?){
+        var event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), true)
+        if(flags != nil){ CGEventSetFlags(event, flags!) }
         CGEventPost(.CGHIDEventTap, event)
-        event = CGEventCreateKeyboardEvent(src, CGKeyCode(kVK_ANSI_C), false)
-        CGEventSetFlags(event, .FlagMaskCommand)
-        CGEventPost(.CGHIDEventTap, event)
-    }
-    func paste(){
-        let src = CGEventSourceCreate(CGEventSourceStateID.HIDSystemState)
-        var event = CGEventCreateKeyboardEvent(src, CGKeyCode(kVK_ANSI_V), true)
-        CGEventSetFlags(event, .FlagMaskCommand)
-        CGEventPost(.CGHIDEventTap, event)
-        event = CGEventCreateKeyboardEvent(src, CGKeyCode(kVK_ANSI_V), false)
-        CGEventSetFlags(event, .FlagMaskCommand)
+        event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), false)
+        if(flags != nil){ CGEventSetFlags(event, flags!) }
         CGEventPost(.CGHIDEventTap, event)
     }
+    func yank(){ press(kVK_ANSI_C, .FlagMaskCommand) }
+    func paste(){ press(kVK_ANSI_P, .FlagMaskCommand) }
     func tick(){
-        var dx = _dx, dy = _dy
-        var p = NSEvent.mouseLocation()
         var displayID = CGMainDisplayID()
         var rect = CGDisplayBounds(displayID)
+        var p = NSEvent.mouseLocation()
+        var dx = _dx, dy = _dy
         
         // normalize deltas
         let s = sqrt(dx*dx + dy*dy);
@@ -248,13 +241,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         if(_wheelMode){
             let wv = Int(vy*2)
             let wh = Int(-vx*2)
-            let src:CGEventSource! = CGEventSourceCreate(CGEventSourceStateID.HIDSystemState)
-            let event = VMCreateMouseWheelEvent(src, 2, wv, wh)
+            let event = VMCreateMouseWheelEvent(2, wv, wh)
             CGEventPost(CGEventTapLocation.CGHIDEventTap, event.takeUnretainedValue())
             event.release()
             return
         }
-        
+
         // move
         var pos = CGPoint(x:p.x + vx, y:rect.size.height - p.y - vy);
         p.x += vx;
@@ -264,8 +256,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         var displayCount:UInt32 = 0;
         CGGetDisplaysWithPoint(pos, 1, &displayID, &displayCount);
         if (displayCount == 0) {
-            CGGetDisplaysWithPoint(CGPointMake(p.x, p.y), 1, &displayID, &displayCount);
-            rect = CGDisplayBounds(displayID);
+            CGGetDisplaysWithPoint(CGPointMake(p.x, p.y), 1, &displayID, &displayCount)
+            rect = CGDisplayBounds(displayID)
             if (pos.x < rect.origin.x) {
                 pos.x = rect.origin.x;
             } else if (pos.x > rect.origin.x + rect.size.width - 1) {
@@ -290,34 +282,51 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             type = .OtherMouseDragged;
             button = .Center;
         }
-        let src = CGEventSourceCreate(CGEventSourceStateID.HIDSystemState)
-        let event = CGEventCreateMouseEvent(src, type, pos, button)
+        let event = CGEventCreateMouseEvent(nil, type, pos, button)
         CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
         
         _timestamp = 0
+        _click_state = 0
     }
     func click(type:CGEventType, _ button:CGMouseButton, _ pressed:Bool){
-        let src = CGEventSourceCreate(CGEventSourceStateID.HIDSystemState)
         let p = NSEvent.mouseLocation()
         var displayID:CGDirectDisplayID = 0;
         var displayCount:CGDisplayCount = 0;
         CGGetActiveDisplayList(1, &displayID, &displayCount)
         let rect = CGDisplayBounds(displayID)
         let pos = CGPointMake(p.x, rect.size.height - p.y)
-        let event = CGEventCreateMouseEvent(src, type, pos, button)
+        let event = CGEventCreateMouseEvent(nil, type, pos, button)
         let timestamp = UInt64(1000000000*GetCurrentEventTime())
         if(pressed){
             if(timestamp - _timestamp < 500000000){
-                CGEventSetIntegerValueField(event, .MouseEventClickState, 2);
+                CGEventSetIntegerValueField(event, .MouseEventClickState, ++_click_state)
             }else{
-                CGEventSetIntegerValueField(event, .MouseEventClickState, 1);
+                CGEventSetIntegerValueField(event, .MouseEventClickState, 1)
+                _click_state = 1
             }
             _timestamp = timestamp
         }
         CGEventSetTimestamp(event, timestamp)
         CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
     }
-
+    private func rawFlag(flag:CGEventFlags) -> UInt64 {return flag.rawValue}
+    func move(dx: Int, _ dy: Int, _ flags: CGEventFlags, _ pressed: Bool){
+        let ctrl = (flags.rawValue & rawFlag(.FlagMaskControl)) != 0
+        if(ctrl){
+            if(pressed){
+                switch(dx, dy){
+                case (-1, 0): press(kVK_LeftArrow, .FlagMaskControl)
+                case (1, 0): press(kVK_RightArrow, .FlagMaskControl)
+                case (0, 1): press(kVK_DownArrow, .FlagMaskControl)
+                case (0, -1): press(kVK_UpArrow, .FlagMaskControl)
+                default: break
+                }
+            }
+        }else{
+            if(pressed){ _dx += CGFloat(dx); _dy += CGFloat(dy) }
+            else{ _dx -= CGFloat(dx); _dy -= CGFloat(dy) }
+        }
+    }
     func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool{
         if(_timer != nil){
             switch(Int(keycode)){
@@ -328,10 +337,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                     NSLog("mouse mode disabled")
                 }
             case kVK_ANSI_G: self._wheelMode = pressed
-            case kVK_ANSI_H: _dx += pressed ? -1 : 1
-            case kVK_ANSI_J: _dy += pressed ? 1 : -1
-            case kVK_ANSI_K: _dy += pressed ? -1 : 1
-            case kVK_ANSI_L: _dx += pressed ? 1 : -1
+            case kVK_ANSI_H: move(-1, 0, flags, pressed)
+            case kVK_ANSI_J: move(0, 1, flags, pressed)
+            case kVK_ANSI_K: move(0, -1, flags, pressed)
+            case kVK_ANSI_L: move(1, 0, flags, pressed)
             case kVK_ANSI_A: _speedSlower = pressed
             case kVK_ANSI_S: _speedSlow = pressed
             case kVK_ANSI_D: _speedFast = pressed
@@ -346,7 +355,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 _centerButton = pressed
                 click(pressed ? .OtherMouseDown : .OtherMouseUp, .Center, pressed)
             case kVK_ANSI_Y: if(pressed){ yank() }
-            case kVK_ANSI_Y: if(pressed){ paste() }
+            case kVK_ANSI_P: if(pressed){ paste() }
             default: return false
             }
         }else{
@@ -354,8 +363,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_Semicolon:
                 if(pressed && flags.rawValue & CGEventFlags.FlagMaskControl.rawValue != 0){
                     NSLog("mouse mode enabled")
+                    _dx = 0
+                    _dy = 0
                     let op = NSBlockOperation(){self.tick()}
-                    _timer = NSTimer.scheduledTimerWithTimeInterval(0.013, target: op,
+                    _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
                         selector: "main", userInfo: nil, repeats: true)
                 }
                 return true
