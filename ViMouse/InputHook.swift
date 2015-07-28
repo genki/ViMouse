@@ -15,26 +15,38 @@ protocol InputHookDelegate {
 
 class InputHook {
     var _port: CFMachPort?
-    var _pressed = Dictionary<Int64, Bool>()
+    var _pressed = Dictionary<Int64, (Bool, CGEventFlags)>()
     var _flags = CGEventFlags(rawValue: 0)
     
-    var delegate: InputHookDelegate?
+    let _callback: CGEventTapCallBack = {(proxy, type, event, arg) -> Unmanaged<CGEvent>? in
+        let this = Unmanaged<InputHook>.fromOpaque(COpaquePointer(arg)).takeUnretainedValue()
+        switch(type){
+        case .KeyDown: if(this.keyDown(event)){return nil}
+        case .KeyUp: if(this.keyUp(event)){return nil}
+        case .FlagsChanged: this.flagsChanged(event)
+        default: break
+        }
+        return Unmanaged<CGEvent>.passUnretained(event)
+    }
     
+    var delegate: InputHookDelegate?
+
     func keyDown(event: CGEvent) -> Bool {
-        let keycode = CGEventGetIntegerValueField(event, CGEventField.KeyboardEventKeycode)
+        let keycode = CGEventGetIntegerValueField(event, .KeyboardEventKeycode)
         let pressed = _pressed[keycode]
         if(pressed == nil){
             let result = (self.delegate?.handleInput(keycode, _flags!, true))!
-            _pressed[keycode] = result
+            _pressed[keycode] = (result, _flags!)
             return result
         }else{
-            return pressed!
+            return pressed!.0
         }
     }
     func keyUp(event: CGEvent) -> Bool {
-        let keycode = CGEventGetIntegerValueField(event, CGEventField.KeyboardEventKeycode)
-        if((_pressed.removeValueForKey(keycode)) != nil){
-            return (self.delegate?.handleInput(keycode, _flags!, false))!
+        let keycode = CGEventGetIntegerValueField(event, .KeyboardEventKeycode)
+        let pressed = _pressed.removeValueForKey(keycode)
+        if(pressed != nil){
+            return (self.delegate?.handleInput(keycode, pressed!.1, false))!
         }
         return false
     }
@@ -42,22 +54,12 @@ class InputHook {
         _flags = CGEventGetFlags(event)
     }
     func setup(){
-        let callback: CGEventTapCallBack = {(proxy, type, event, arg) -> Unmanaged<CGEvent>? in
-            let this = Unmanaged<InputHook>.fromOpaque(COpaquePointer(arg)).takeUnretainedValue()
-            switch(type){
-            case .KeyDown: if(this.keyDown(event)){return nil}
-            case .KeyUp: if(this.keyUp(event)){return nil}
-            case .FlagsChanged: this.flagsChanged(event)
-            default: break
-            }
-            return Unmanaged<CGEvent>.passUnretained(event)
-        }
         let mask = CGEventMask(1 << CGEventType.KeyDown.rawValue)
             | CGEventMask(1 << CGEventType.KeyUp.rawValue)
             | CGEventMask(1 << CGEventType.FlagsChanged.rawValue)
-        _port = CGEventTapCreate(CGEventTapLocation.CGSessionEventTap,
+        _port = CGEventTapCreate(.CGHIDEventTap,
             CGEventTapPlacement.HeadInsertEventTap, CGEventTapOptions.Default,
-            mask, callback, UnsafeMutablePointer(Unmanaged.passUnretained(self).toOpaque()))!
+            mask, _callback, UnsafeMutablePointer(Unmanaged.passUnretained(self).toOpaque()))!
         let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, _port, 0)
         CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode)
     }

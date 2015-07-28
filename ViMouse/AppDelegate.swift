@@ -320,6 +320,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _dy = 0
         _timestamp = 0
         _click_state = 1
+        _leftButton = false
+        _rightButton = false
+        _centerButton = false
     }
     private func rawFlag(flag:CGEventFlags) -> UInt64 {return flag.rawValue}
     func move(dx: Int, _ dy: Int, _ flags: CGEventFlags, _ pressed: Bool){
@@ -348,6 +351,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 if(pressed){
                     _timer!.invalidate()
                     _timer = nil
+                    reset()
                     NSLog("mouse mode disabled")
                 }
             case kVK_ANSI_G: self._wheelMode = pressed
@@ -380,7 +384,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_Semicolon:
                 if(pressed && ctrl){
                     NSLog("mouse mode enabled")
-                    reset()
                     let op = NSBlockOperation(){self.tick()}
                     _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
                         selector: "main", userInfo: nil, repeats: true)
