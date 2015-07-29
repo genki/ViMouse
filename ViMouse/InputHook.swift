@@ -23,7 +23,7 @@ class InputHook {
         switch(type){
         case .KeyDown: if(this.keyDown(event)){return nil}
         case .KeyUp: if(this.keyUp(event)){return nil}
-        case .FlagsChanged: this.flagsChanged(event)
+        case .FlagsChanged: this._flags = CGEventGetFlags(event)
         default: break
         }
         return Unmanaged<CGEvent>.passUnretained(event)
@@ -49,9 +49,6 @@ class InputHook {
             return (self.delegate?.handleInput(keycode, pressed!.1, false))!
         }
         return false
-    }
-    func flagsChanged(event: CGEvent){
-        _flags = CGEventGetFlags(event)
     }
     func setup(){
         let mask = CGEventMask(1 << CGEventType.KeyDown.rawValue)

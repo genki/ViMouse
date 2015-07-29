@@ -191,12 +191,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func applicationDidResignActive(notification: NSNotification) {
         _inputHook.enable()
     }
-    private func press(keycode:Int, _ flags: CGEventFlags?){
+    private func press(keycode:Int, _ flags: CGEventFlags){
         var event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), true)
-        if(flags != nil){ CGEventSetFlags(event, flags!) }
+        CGEventSetFlags(event, flags)
         CGEventPost(.CGHIDEventTap, event)
         event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), false)
-        if(flags != nil){ CGEventSetFlags(event, flags!) }
+        CGEventSetFlags(event, flags)
         CGEventPost(.CGHIDEventTap, event)
     }
     func yank(){ press(kVK_ANSI_C, .FlagMaskCommand) }
@@ -226,27 +226,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _vy *= 0.8
         
         var vx = _vx, vy = _vy
-        
-        if(_speedFaster){
-            vx *= 4
-            vy *= 4
-        }
-        if(_speedFast){
-            vx *= 2;
-            vy *= 2;
-        }
-        if(_speedSlow){
-            vx /= 2;
-            vy /= 2;
-        }
-        if(_speedSlower){
-            vx /= 4;
-            vy /= 4;
-        }
+        if(_speedFaster){ vx *= 4; vy *= 4 }
+        if(_speedFast){ vx *= 2; vy *= 2 }
+        if(_speedSlow){ vx /= 2; vy /= 2 }
+        if(_speedSlower){ vx /= 4; vy /= 4 }
         
         if(_wheelMode){
-            let wv = Int(vy*2)
-            let wh = Int(-vx*2)
+            let wv = Int(vy*2), wh = Int(-vx*2)
             let event = VMCreateMouseWheelEvent(wv, wh)
             CGEventPost(CGEventTapLocation.CGHIDEventTap, event.takeUnretainedValue())
             event.release()
@@ -294,25 +280,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _timestamp = 0
         _click_state = 1
     }
+    private func doublePress(doubled: () -> Void, _ singled: () -> Void){
+        let timestamp = UInt64(1000000000*GetCurrentEventTime())
+        if(timestamp - _timestamp < 500000000){ doubled() }
+        else{ singled() }
+        _timestamp = timestamp
+    }
     func click(type:CGEventType, _ button:CGMouseButton, _ pressed:Bool){
         let p = NSEvent.mouseLocation()
-        var displayID:CGDirectDisplayID = 0;
-        var displayCount:CGDisplayCount = 0;
+        var displayID:CGDirectDisplayID = 0
+        var displayCount:CGDisplayCount = 0
         CGGetActiveDisplayList(1, &displayID, &displayCount)
         let rect = CGDisplayBounds(displayID)
         let pos = CGPointMake(p.x, rect.size.height - p.y)
         let event = CGEventCreateMouseEvent(nil, type, pos, button)
-        let timestamp = UInt64(1000000000*GetCurrentEventTime())
         if(pressed){
-            if(timestamp - _timestamp < 500000000){
-                ++_click_state
-            }else{
-                _click_state = 1
-            }
-            _timestamp = timestamp
+            doublePress({++self._click_state}, {self._click_state = 1})
         }
+        CGEventSetIntegerValueField(event, .MouseEventNumber, _click_state)
         CGEventSetIntegerValueField(event, .MouseEventClickState, _click_state)
-        CGEventSetTimestamp(event, timestamp)
         CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
     }
     private func reset(){
@@ -325,35 +311,53 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _centerButton = false
     }
     private func rawFlag(flag:CGEventFlags) -> UInt64 {return flag.rawValue}
+    private func pressArrow(dx:Int, _ dy:Int, _ flags:CGEventFlags) {
+        switch(dx, dy){
+        case (-1, 0): press(kVK_LeftArrow, flags)
+        case (1, 0): press(kVK_RightArrow, flags)
+        case (0, 1): press(kVK_DownArrow, flags)
+        case (0, -1): press(kVK_UpArrow, flags)
+        default: break
+        }
+    }
     func move(dx: Int, _ dy: Int, _ flags: CGEventFlags, _ pressed: Bool){
         let ctrl = (flags.rawValue & rawFlag(.FlagMaskControl)) != 0
-        if(ctrl){
-            if(pressed){
-                switch(dx, dy){
-                case (-1, 0): press(kVK_LeftArrow, .FlagMaskControl)
-                case (1, 0): press(kVK_RightArrow, .FlagMaskControl)
-                case (0, 1): press(kVK_DownArrow, .FlagMaskControl)
-                case (0, -1): press(kVK_UpArrow, .FlagMaskControl)
-                default: break
-                }
-            }
+        let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
+        let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
+        let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
+        switch(ctrl, shift, opt, cmd, _wheelMode){
+        case (true, false, false, false, false):
+            if(pressed){ pressArrow(dx, dy, .FlagMaskControl) }
             reset()
-        }else{
+        case (true, true, false, true, false):
+            if(pressed){ pressArrow(dx, dy, .FlagMaskCommand) }
+        case (true, true, false, false, false):
+            if(pressed){ pressArrow(dx, dy, .FlagMaskNonCoalesced) }
+        default:
             if(pressed){ _dx += CGFloat(dx); _dy += CGFloat(dy) }
             else{ _dx -= CGFloat(dx); _dy -= CGFloat(dy) }
         }
     }
+    private func enableMouseMode(){
+        NSLog("mouse mode enabled")
+        let op = NSBlockOperation(){self.tick()}
+        _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
+            selector: "main", userInfo: nil, repeats: true)
+    }
+    private func disableMouseMode(){
+        _timer!.invalidate()
+        _timer = nil
+        reset()
+        NSLog("mouse mode disabled")
+    }
     func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool{
         let ctrl = flags.rawValue & rawFlag(.FlagMaskControl) != 0
+        let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
+        let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
+        let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
         if(_timer != nil){
             switch(Int(keycode)){
-            case kVK_ANSI_I:
-                if(pressed){
-                    _timer!.invalidate()
-                    _timer = nil
-                    reset()
-                    NSLog("mouse mode disabled")
-                }
+            case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
             case kVK_ANSI_G: self._wheelMode = pressed
             case kVK_ANSI_H: move(-1, 0, flags, pressed)
             case kVK_ANSI_J: move(0, 1, flags, pressed)
@@ -364,6 +368,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_D: _speedFast = pressed
             case kVK_ANSI_F: _speedFaster = pressed
             case kVK_Space:
+                if(!ctrl && !shift && !opt && cmd){return false}
                 _leftButton = pressed
                 click(pressed ? .LeftMouseDown : .LeftMouseUp, .Left, pressed)
             case kVK_ANSI_Semicolon:
@@ -376,17 +381,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 click(pressed ? .OtherMouseDown : .OtherMouseUp, .Center, pressed)
             case kVK_ANSI_Y: if(pressed){ yank() }
             case kVK_ANSI_P: if(pressed){ paste() }
+            case kVK_JIS_Kana, kVK_JIS_Eisu:
+                if(!pressed){ disableMouseMode() }
+                return false
             default: return false
             }
             return true
         }else{
             switch(Int(keycode)){
             case kVK_ANSI_Semicolon:
-                if(pressed && ctrl){
-                    NSLog("mouse mode enabled")
-                    let op = NSBlockOperation(){self.tick()}
-                    _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
-                        selector: "main", userInfo: nil, repeats: true)
+                if(!pressed && ctrl){
+                    enableMouseMode()
                     return true
                 }
             default: break
