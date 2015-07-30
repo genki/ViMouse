@@ -28,6 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _timestamp:CGEventTimestamp = 0
     var _click_state:Int64 = 1
     var _statusItem: NSStatusItem!
+    var _wokenupAt:EventTime = 0
 
     override func awakeFromNib(){
         let pid = NSProcessInfo.processInfo().processIdentifier
@@ -347,10 +348,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
         switch(ctrl, shift, opt, cmd, _wheelMode){
         case (true, false, false, false, false):
-            if(pressed){ pressArrow(dx, dy, .FlagMaskControl) }
+            if(pressed){pressArrow(dx, dy, .FlagMaskControl)}
             reset()
         case (true, true, false, true, false):
-            if(pressed){ pressArrow(dx, dy, .FlagMaskCommand) }
+            if(pressed && GetCurrentEventTime() - _wokenupAt >= 1){
+                pressArrow(dx, dy, .FlagMaskCommand)
+            }
         case (true, true, false, false, false):
             if(pressed){ pressArrow(dx, dy, .FlagMaskNonCoalesced) }
         default:
@@ -364,6 +367,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
             selector: "main", userInfo: nil, repeats: true)
         _statusItem.button!.highlighted = true
+        _wokenupAt = GetCurrentEventTime()
+        reset()
     }
     private func disableMouseMode(){
         _timer!.invalidate()
@@ -377,9 +382,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _handling = true
         defer{_handling = false}
         let ctrl = flags.rawValue & rawFlag(.FlagMaskControl) != 0
-        let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
-        let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
-        let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
+        //let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
+        //let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
+        //let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
         if(_timer != nil){
             switch(Int(keycode)){
             case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
@@ -393,7 +398,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_D: _speedFast = pressed
             case kVK_ANSI_F: _speedFaster = pressed
             case kVK_Space:
-                if(!ctrl && !shift && !opt && cmd){return false}
+                //if(!ctrl && !shift && !opt && cmd){return false}
                 _leftButton = pressed
                 click(pressed ? .LeftMouseDown : .LeftMouseUp, .Left, pressed)
             case kVK_ANSI_Semicolon:
@@ -417,10 +422,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }else{
             switch(Int(keycode)){
             case kVK_ANSI_Semicolon:
-                if(!pressed && ctrl){
-                    enableMouseMode()
-                    return true
-                }
+                if(!pressed && ctrl){enableMouseMode()}
+                return true
             default: break
             }
             return false
