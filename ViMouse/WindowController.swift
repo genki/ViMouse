@@ -9,7 +9,7 @@
 import Cocoa
 
 class WindowController : NSWindowController, NSWindowDelegate {
-    
+
     func windowShouldClose(sender: AnyObject) -> Bool {
         NSApplication.sharedApplication().hide(self)
         return false

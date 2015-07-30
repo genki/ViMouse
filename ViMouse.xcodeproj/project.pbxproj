@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB0A4F6C1B6899AC001CC7AB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FB0A4F6B1B6899AC001CC7AB /* Icon.png */; };
 		FB3AD3C61B60718B0058B2E0 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */; };
 		FB3AD3CA1B61DC100058B2E0 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3C91B61DC100058B2E0 /* WindowController.swift */; };
 		FB3AD3D91B6213F30058B2E0 /* Hotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3D81B6213F30058B2E0 /* Hotkey.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FB0A4F6B1B6899AC001CC7AB /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		FB3AD3C91B61DC100058B2E0 /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		FB3AD3D11B62112D0058B2E0 /* ViMouse-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViMouse-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -86,11 +88,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FB0A4F6A1B689979001CC7AB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FB0A4F6B1B6899AC001CC7AB /* Icon.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		FB6B6BD81B5B57C6006E606C = {
 			isa = PBXGroup;
 			children = (
 				FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */,
 				FB6B6BE31B5B57C6006E606C /* ViMouse */,
+				FB0A4F6A1B689979001CC7AB /* Resources */,
 				FB6B6BF81B5B57C6006E606C /* ViMouseTests */,
 				FB6B6C031B5B57C6006E606C /* ViMouseUITests */,
 				FB6B6BE21B5B57C6006E606C /* Products */,
@@ -247,6 +258,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB0A4F6C1B6899AC001CC7AB /* Icon.png in Resources */,
 				FB6B6BEC1B5B57C6006E606C /* Assets.xcassets in Resources */,
 				FB6B6BEF1B5B57C6006E606C /* Main.storyboard in Resources */,
 			);

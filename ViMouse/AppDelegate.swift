@@ -12,6 +12,7 @@ import CoreGraphics
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _inputHook = InputHook()
+    var _handling = false
     var _wheelMode = false
     var _speedSlower = false
     var _speedSlow = false
@@ -26,16 +27,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _timer:NSTimer? = nil
     var _timestamp:CGEventTimestamp = 0
     var _click_state:Int64 = 1
+    var _statusItem: NSStatusItem!
 
+    override func awakeFromNib(){
+        let pid = NSProcessInfo.processInfo().processIdentifier
+        let bundle = NSBundle.mainBundle()
+        let bundleID = bundle.bundleIdentifier
+        let appURL = bundle.executableURL
+        for app in NSWorkspace.sharedWorkspace().runningApplications {
+            if(pid == app.processIdentifier){ continue }
+            if(appURL == app.executableURL){ NSApp.terminate(self) }
+            if(bundleID == app.bundleIdentifier){ NSApp.terminate(self) }
+        }
+        
+        let statusBar = NSStatusBar.systemStatusBar()
+        _statusItem = statusBar.statusItemWithLength(CGFloat(NSVariableStatusItemLength))
+        let icon = NSImage(named:"Icon")!
+        icon.template = true
+        icon.resizingMode = .Stretch
+        icon.size = NSSize(width: 16, height: 16)
+        
+        //_statusItem.title = "ViMouse"
+        _statusItem.image = icon
+        //_statusItem.target = self
+        //_statusItem.action = Selector("open:")
+    }
+    
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
         _inputHook.delegate = self
-        _inputHook.enable()
-        
-        let statusBar = NSStatusBar.systemStatusBar()
-        let statusBarItem = statusBar.statusItemWithLength(CGFloat(NSVariableStatusItemLength))
-        //statusBarItem!.menu = statusMenu
-        statusBarItem.title = "TestApp"
+        _inputHook.enable()        
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -185,7 +206,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
 
     func applicationDidBecomeActive(notification: NSNotification) {
         _inputHook.disable()
-        NSApplication.sharedApplication().mainWindow?.makeKeyAndOrderFront(self);
+        NSApp.activateIgnoringOtherApps(true)
+        NSApp.mainWindow?.makeKeyAndOrderFront(self)
     }
     
     func applicationDidResignActive(notification: NSNotification) {
@@ -199,8 +221,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         CGEventSetFlags(event, flags)
         CGEventPost(.CGHIDEventTap, event)
     }
-    func yank(){ press(kVK_ANSI_C, .FlagMaskCommand) }
-    func paste(){ press(kVK_ANSI_V, .FlagMaskCommand) }
     func tick(){
         var displayID = CGMainDisplayID()
         var rect = CGDisplayBounds(displayID)
@@ -343,14 +363,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let op = NSBlockOperation(){self.tick()}
         _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
             selector: "main", userInfo: nil, repeats: true)
+        _statusItem.button!.highlighted = true
     }
     private func disableMouseMode(){
         _timer!.invalidate()
         _timer = nil
         reset()
         NSLog("mouse mode disabled")
+        _statusItem.button!.highlighted = false
     }
     func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool{
+        if(_handling){return false}
+        _handling = true
+        defer{_handling = false}
         let ctrl = flags.rawValue & rawFlag(.FlagMaskControl) != 0
         let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
         let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
@@ -379,8 +404,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_N:
                 _centerButton = pressed
                 click(pressed ? .OtherMouseDown : .OtherMouseUp, .Center, pressed)
-            case kVK_ANSI_Y: if(pressed){ yank() }
-            case kVK_ANSI_P: if(pressed){ paste() }
+            case kVK_ANSI_Y: if(pressed){ press(kVK_ANSI_C, .FlagMaskCommand) }
+            case kVK_ANSI_P: if(pressed){ press(kVK_ANSI_V, .FlagMaskCommand) }
+            //case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .FlagMaskCommand) }
+            //case kVK_ANSI_R: if(pressed){ press(kVK_ANSI_R, .FlagMaskCommand) }
             case kVK_JIS_Kana, kVK_JIS_Eisu:
                 if(!pressed){ disableMouseMode() }
                 return false
