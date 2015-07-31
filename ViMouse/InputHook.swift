@@ -14,17 +14,21 @@ protocol InputHookDelegate {
 }
 
 class InputHook {
+    let pid = NSProcessInfo.processInfo().processIdentifier
     var _port: CFMachPort?
     var _pressed = Dictionary<Int64, (Bool, CGEventFlags)>()
     var _flags = CGEventFlags(rawValue: 0)
     
     let _callback: CGEventTapCallBack = {(proxy, type, event, arg) -> Unmanaged<CGEvent>? in
         let this = Unmanaged<InputHook>.fromOpaque(COpaquePointer(arg)).takeUnretainedValue()
-        switch(type){
-        case .KeyDown: if(this.keyDown(event)){return nil}
-        case .KeyUp: if(this.keyUp(event)){return nil}
-        case .FlagsChanged: this._flags = CGEventGetFlags(event)
-        default: break
+        let pid = CGEventGetIntegerValueField(event, .EventSourceUnixProcessID)
+        if(Int32(pid) != this.pid){
+            switch(type){
+            case .KeyDown: if(this.keyDown(event)){return nil}
+            case .KeyUp: if(this.keyUp(event)){return nil}
+            case .FlagsChanged: this._flags = CGEventGetFlags(event)
+            default: break
+            }
         }
         return Unmanaged<CGEvent>.passUnretained(event)
     }
@@ -51,11 +55,10 @@ class InputHook {
         return false
     }
     func setup(){
-        let mask = CGEventMask(1 << CGEventType.KeyDown.rawValue)
-            | CGEventMask(1 << CGEventType.KeyUp.rawValue)
-            | CGEventMask(1 << CGEventType.FlagsChanged.rawValue)
-        _port = CGEventTapCreate(.CGHIDEventTap,
-            CGEventTapPlacement.HeadInsertEventTap, CGEventTapOptions.Default,
+        let types:[CGEventType] = [.KeyDown, .KeyUp, .FlagsChanged]
+        let mask = types.reduce(0){$0 | CGEventMask(1 << $1.rawValue)}
+        //let mask = CGEventMask(UInt64.max)
+        _port = CGEventTapCreate(.CGHIDEventTap, .HeadInsertEventTap, .Default,
             mask, _callback, UnsafeMutablePointer(Unmanaged.passUnretained(self).toOpaque()))!
         let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, _port, 0)
         CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode)

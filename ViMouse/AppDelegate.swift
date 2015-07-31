@@ -12,7 +12,6 @@ import CoreGraphics
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _inputHook = InputHook()
-    var _handling = false
     var _wheelMode = false
     var _speedSlower = false
     var _speedSlow = false
@@ -31,14 +30,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _wokenupAt:EventTime = 0
 
     override func awakeFromNib(){
-        let pid = NSProcessInfo.processInfo().processIdentifier
         let bundle = NSBundle.mainBundle()
         let bundleID = bundle.bundleIdentifier
         let appURL = bundle.executableURL
         for app in NSWorkspace.sharedWorkspace().runningApplications {
-            if(pid == app.processIdentifier){ continue }
-            if(appURL == app.executableURL){ NSApp.terminate(self) }
-            if(bundleID == app.bundleIdentifier){ NSApp.terminate(self) }
+            if(app.processIdentifier == _inputHook.pid){ continue }
+            if(app.executableURL == appURL){ NSApp.terminate(self) }
+            if(app.bundleIdentifier == bundleID){ NSApp.terminate(self) }
         }
         
         let statusBar = NSStatusBar.systemStatusBar()
@@ -214,14 +212,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func applicationDidResignActive(notification: NSNotification) {
         _inputHook.enable()
     }
-    private func press(keycode:Int, _ flags: CGEventFlags){
-        var event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), true)
-        CGEventSetFlags(event, flags)
-        CGEventPost(.CGHIDEventTap, event)
-        event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), false)
-        CGEventSetFlags(event, flags)
-        CGEventPost(.CGHIDEventTap, event)
-    }
     func tick(){
         var displayID = CGMainDisplayID()
         var rect = CGDisplayBounds(displayID)
@@ -255,7 +245,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         if(_wheelMode){
             let wv = Int(vy*2), wh = Int(-vx*2)
             let event = VMCreateMouseWheelEvent(wv, wh)
-            CGEventPost(CGEventTapLocation.CGHIDEventTap, event.takeUnretainedValue())
+            postEvent(event.takeUnretainedValue())
             event.release()
             return
         }
@@ -296,10 +286,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             button = .Center;
         }
         let event = CGEventCreateMouseEvent(nil, type, pos, button)
-        CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
+        postEvent(event)
         
         _timestamp = 0
         _click_state = 1
+    }
+    private func press(keycode:Int, _ flags: CGEventFlags...){
+        let flag = CGEventFlags(rawValue: flags.reduce(0){$0 | $1.rawValue})!
+        for pressed in [true, false]{
+            let event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), pressed)
+            CGEventSetFlags(event, flag)
+            postEvent(event)
+        }
     }
     private func doublePress(doubled: () -> Void, _ singled: () -> Void){
         let timestamp = UInt64(1000000000*GetCurrentEventTime())
@@ -320,7 +318,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }
         CGEventSetIntegerValueField(event, .MouseEventNumber, _click_state)
         CGEventSetIntegerValueField(event, .MouseEventClickState, _click_state)
-        CGEventPost(CGEventTapLocation.CGHIDEventTap, event)
+        postEvent(event)
+    }
+    private func postEvent(event:CGEvent?){
+        CGEventSetIntegerValueField(event, .EventSourceUnixProcessID, Int64(_inputHook.pid))
+        CGEventPost(.CGHIDEventTap, event)
     }
     private func reset(){
         _dx = 0
@@ -348,12 +350,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
         switch(ctrl, shift, opt, cmd, _wheelMode){
         case (true, false, false, false, false):
-            if(pressed){pressArrow(dx, dy, .FlagMaskControl)}
+            if(pressed && GetCurrentEventTime() - _wokenupAt >= 1){
+                pressArrow(dx, dy, .FlagMaskControl)
+            }
             reset()
         case (true, true, false, true, false):
-            if(pressed && GetCurrentEventTime() - _wokenupAt >= 1){
-                pressArrow(dx, dy, .FlagMaskCommand)
-            }
+            if(pressed){pressArrow(dx, dy, .FlagMaskCommand)}
         case (true, true, false, false, false):
             if(pressed){ pressArrow(dx, dy, .FlagMaskNonCoalesced) }
         default:
@@ -378,13 +380,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _statusItem.button!.highlighted = false
     }
     func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool{
-        if(_handling){return false}
-        _handling = true
-        defer{_handling = false}
         let ctrl = flags.rawValue & rawFlag(.FlagMaskControl) != 0
-        //let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
-        //let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
-        //let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
+        let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
+        let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
+        let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
         if(_timer != nil){
             switch(Int(keycode)){
             case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
@@ -411,8 +410,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 click(pressed ? .OtherMouseDown : .OtherMouseUp, .Center, pressed)
             case kVK_ANSI_Y: if(pressed){ press(kVK_ANSI_C, .FlagMaskCommand) }
             case kVK_ANSI_P: if(pressed){ press(kVK_ANSI_V, .FlagMaskCommand) }
-            //case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .FlagMaskCommand) }
-            //case kVK_ANSI_R: if(pressed){ press(kVK_ANSI_R, .FlagMaskCommand) }
+            case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .FlagMaskCommand) }
+            case kVK_ANSI_R: if(pressed){ press(kVK_ANSI_R, .FlagMaskCommand) }
+            case kVK_ANSI_Slash: if(pressed){ press(kVK_ANSI_F, .FlagMaskCommand) }
             case kVK_JIS_Kana, kVK_JIS_Eisu:
                 if(!pressed){ disableMouseMode() }
                 return false
@@ -422,8 +422,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }else{
             switch(Int(keycode)){
             case kVK_ANSI_Semicolon:
-                if(!pressed && ctrl){enableMouseMode()}
-                return true
+                if(ctrl && !shift && !opt && !cmd){
+                    if(!pressed){enableMouseMode()}
+                    return true
+                }
             default: break
             }
             return false
