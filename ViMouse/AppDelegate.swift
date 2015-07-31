@@ -12,7 +12,6 @@ import CoreGraphics
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _inputHook = InputHook()
-    var _wheelMode = false
     var _speedSlower = false
     var _speedSlow = false
     var _speedFast = false
@@ -148,9 +147,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             NSLog("\(NSStringFromClass(self.dynamicType)) unable to commit editing before saving")
         }
         if managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-            } catch {
+            do {try managedObjectContext.save()}
+            catch {
                 let nserror = error as NSError
                 NSApplication.sharedApplication().presentError(nserror)
             }
@@ -169,14 +167,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             NSLog("\(NSStringFromClass(self.dynamicType)) unable to commit editing to terminate")
             return .TerminateCancel
         }
+        if !managedObjectContext.hasChanges {return .TerminateNow}
         
-        if !managedObjectContext.hasChanges {
-            return .TerminateNow
-        }
-        
-        do {
-            try managedObjectContext.save()
-        } catch {
+        do {try managedObjectContext.save()}
+        catch {
             let nserror = error as NSError
             // Customize this code block to include application-specific recovery steps.
             let result = sender.presentError(nserror)
@@ -242,7 +236,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         if(_speedSlow){ vx /= 2; vy /= 2 }
         if(_speedSlower){ vx /= 4; vy /= 4 }
         
-        if(_wheelMode){
+        if(_inputHook.wheel){
             let wv = Int(vy*2), wh = Int(-vx*2)
             let event = VMCreateMouseWheelEvent(wv, wh)
             postEvent(event.takeUnretainedValue())
@@ -343,12 +337,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         default: break
         }
     }
-    func move(dx: Int, _ dy: Int, _ flags: CGEventFlags, _ pressed: Bool){
-        let ctrl = (flags.rawValue & rawFlag(.FlagMaskControl)) != 0
-        let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
-        let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
-        let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
-        switch(ctrl, shift, opt, cmd, _wheelMode){
+    func move(dx: Int, _ dy: Int, _ flags: InputHook.Flags, _ pressed: Bool){
+        switch(flags.tuple()){
         case (true, false, false, false, false):
             if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.5){
                 pressArrow(dx, dy, .FlagMaskControl)
@@ -379,21 +369,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         NSLog("mouse mode disabled")
         _statusItem.button!.highlighted = false
     }
-    func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool{
-        let ctrl = flags.rawValue & rawFlag(.FlagMaskControl) != 0
-        let shift = (flags.rawValue & rawFlag(.FlagMaskShift)) != 0
-        let opt = (flags.rawValue & rawFlag(.FlagMaskAlternate)) != 0
-        let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
+    func handleInput(keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool{
         if(_timer != nil){
             switch(Int(keycode)){
-            case kVK_ANSI_I:
-                if(!pressed){
-                    click(.LeftMouseDown, .Left, true)
-                    click(.LeftMouseUp, .Left, false)
-                    disableMouseMode()
-                }
-            case kVK_ANSI_O: if(!pressed){ disableMouseMode() }
-            case kVK_ANSI_G: self._wheelMode = pressed
+            case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
+            case kVK_ANSI_G: _inputHook.wheel = pressed
             case kVK_ANSI_H: move(-1, 0, flags, pressed)
             case kVK_ANSI_J: move(0, 1, flags, pressed)
             case kVK_ANSI_K: move(0, -1, flags, pressed)
@@ -406,7 +386,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 _leftButton = pressed
                 click(pressed ? .LeftMouseDown : .LeftMouseUp, .Left, pressed)
             case kVK_ANSI_Semicolon:
-                if(!ctrl){
+                if(!flags.ctrl){
                     _rightButton = pressed
                     click(pressed ? .RightMouseDown : .RightMouseUp, .Right, pressed)
                 }
@@ -418,7 +398,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .FlagMaskCommand) }
             case kVK_ANSI_R:
                 if(pressed){
-                    if(ctrl){press(kVK_ANSI_Z, .FlagMaskCommand, .FlagMaskShift)}
+                    if(flags.ctrl){press(kVK_ANSI_Z, .FlagMaskCommand, .FlagMaskShift)}
                     else{press(kVK_ANSI_R, .FlagMaskCommand)}
                 }
             case kVK_ANSI_U: if(pressed){ press(kVK_ANSI_Z, .FlagMaskCommand) }
@@ -432,7 +412,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }else{
             switch(Int(keycode)){
             case kVK_ANSI_Semicolon:
-                if(ctrl && !shift && !opt && !cmd){
+                if(flags.ctrl && !flags.shift && !flags.opt && !flags.cmd){
                     if(!pressed){enableMouseMode()}
                     return true
                 }

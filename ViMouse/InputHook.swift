@@ -10,14 +10,38 @@ import Cocoa
 import CoreGraphics
 
 protocol InputHookDelegate {
-    func handleInput(keycode: Int64, _ flags: CGEventFlags, _ pressed: Bool) -> Bool
+    func handleInput(keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool
 }
 
 class InputHook {
+    struct Flags {
+        var ctrl = false
+        var shift = false
+        var opt = false
+        var cmd = false
+        var wheel = false
+        
+        static func from(flags:CGEventFlags?, aWheel:Bool = false) -> Flags{
+            var result = Flags()
+            if(flags != nil){
+                result.ctrl = (flags!.rawValue & CGEventFlags.FlagMaskControl.rawValue) != 0
+                result.shift = (flags!.rawValue & CGEventFlags.FlagMaskShift.rawValue) != 0
+                result.opt = (flags!.rawValue & CGEventFlags.FlagMaskAlternate.rawValue) != 0
+                result.cmd = (flags!.rawValue & CGEventFlags.FlagMaskCommand.rawValue) != 0
+            }
+            result.wheel = aWheel
+            return result
+        }
+        func tuple() -> (Bool,Bool,Bool,Bool,Bool){return (ctrl, shift, opt, cmd, wheel)}
+    }
     let pid = NSProcessInfo.processInfo().processIdentifier
+    var wheel:Bool {
+        get{return _flags.wheel}
+        set(aWheel){_flags.wheel = aWheel}
+    }
     var _port: CFMachPort?
-    var _pressed = Dictionary<Int64, (Bool, CGEventFlags)>()
-    var _flags = CGEventFlags(rawValue: 0)
+    var _pressed = Dictionary<Int64, (Bool, Flags)>()
+    var _flags = Flags()
     
     let _callback: CGEventTapCallBack = {(proxy, type, event, arg) -> Unmanaged<CGEvent>? in
         let this = Unmanaged<InputHook>.fromOpaque(COpaquePointer(arg)).takeUnretainedValue()
@@ -26,7 +50,7 @@ class InputHook {
             switch(type){
             case .KeyDown: if(this.keyDown(event)){return nil}
             case .KeyUp: if(this.keyUp(event)){return nil}
-            case .FlagsChanged: this._flags = CGEventGetFlags(event)
+            case .FlagsChanged: this._flags = Flags.from(CGEventGetFlags(event))
             default: break
             }
         }
@@ -39,8 +63,8 @@ class InputHook {
         let keycode = CGEventGetIntegerValueField(event, .KeyboardEventKeycode)
         let pressed = _pressed[keycode]
         if(pressed == nil){
-            let result = (self.delegate?.handleInput(keycode, _flags!, true))!
-            _pressed[keycode] = (result, _flags!)
+            let result = (self.delegate?.handleInput(keycode, _flags, true))!
+            _pressed[keycode] = (result, _flags)
             return result
         }else{
             return pressed!.0
