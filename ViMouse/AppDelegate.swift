@@ -350,7 +350,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
         switch(ctrl, shift, opt, cmd, _wheelMode){
         case (true, false, false, false, false):
-            if(pressed && GetCurrentEventTime() - _wokenupAt >= 1){
+            if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.5){
                 pressArrow(dx, dy, .FlagMaskControl)
             }
             reset()
@@ -386,7 +386,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let cmd = (flags.rawValue & rawFlag(.FlagMaskCommand)) != 0
         if(_timer != nil){
             switch(Int(keycode)){
-            case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
+            case kVK_ANSI_I:
+                if(!pressed){
+                    click(.LeftMouseDown, .Left, true)
+                    click(.LeftMouseUp, .Left, false)
+                    disableMouseMode()
+                }
+            case kVK_ANSI_O: if(!pressed){ disableMouseMode() }
             case kVK_ANSI_G: self._wheelMode = pressed
             case kVK_ANSI_H: move(-1, 0, flags, pressed)
             case kVK_ANSI_J: move(0, 1, flags, pressed)
@@ -397,7 +403,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_D: _speedFast = pressed
             case kVK_ANSI_F: _speedFaster = pressed
             case kVK_Space:
-                //if(!ctrl && !shift && !opt && cmd){return false}
                 _leftButton = pressed
                 click(pressed ? .LeftMouseDown : .LeftMouseUp, .Left, pressed)
             case kVK_ANSI_Semicolon:
@@ -411,7 +416,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_Y: if(pressed){ press(kVK_ANSI_C, .FlagMaskCommand) }
             case kVK_ANSI_P: if(pressed){ press(kVK_ANSI_V, .FlagMaskCommand) }
             case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .FlagMaskCommand) }
-            case kVK_ANSI_R: if(pressed){ press(kVK_ANSI_R, .FlagMaskCommand) }
+            case kVK_ANSI_R:
+                if(pressed){
+                    if(ctrl){press(kVK_ANSI_Z, .FlagMaskCommand, .FlagMaskShift)}
+                    else{press(kVK_ANSI_R, .FlagMaskCommand)}
+                }
+            case kVK_ANSI_U: if(pressed){ press(kVK_ANSI_Z, .FlagMaskCommand) }
             case kVK_ANSI_Slash: if(pressed){ press(kVK_ANSI_F, .FlagMaskCommand) }
             case kVK_JIS_Kana, kVK_JIS_Eisu:
                 if(!pressed){ disableMouseMode() }
