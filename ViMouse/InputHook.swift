@@ -33,6 +33,14 @@ class InputHook {
             return result
         }
         func tuple() -> (Bool,Bool,Bool,Bool,Bool){return (ctrl, shift, opt, cmd, wheel)}
+        func set(event:CGEvent?){
+            var flags:UInt64 = 0
+            if ctrl {flags |= CGEventFlags.FlagMaskControl.rawValue}
+            if shift {flags |= CGEventFlags.FlagMaskShift.rawValue}
+            if opt {flags |= CGEventFlags.FlagMaskAlternate.rawValue}
+            if cmd {flags |= CGEventFlags.FlagMaskCommand.rawValue}
+            CGEventSetFlags(event, CGEventFlags(rawValue: flags)!)
+        }
     }
     let pid = NSProcessInfo.processInfo().processIdentifier
     var wheel:Bool {
@@ -81,7 +89,7 @@ class InputHook {
     func setup(){
         let types:[CGEventType] = [.KeyDown, .KeyUp, .FlagsChanged]
         let mask = types.reduce(0){$0 | CGEventMask(1 << $1.rawValue)}
-        //let mask = CGEventMask(UInt64.max)
+        //| CGEventMask(UInt64.max)
         _port = CGEventTapCreate(.CGHIDEventTap, .HeadInsertEventTap, .Default,
             mask, _callback, UnsafeMutablePointer(Unmanaged.passUnretained(self).toOpaque()))!
         let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, _port, 0)

@@ -285,12 +285,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _timestamp = 0
         _click_state = 1
     }
+    private func withFlags(flags:CGEventFlags, fn:() -> Void){
+        let oldFlags = NSEvent.modifierFlags()
+        let event = CGEventCreate(nil)
+        CGEventSetType(event, .FlagsChanged)
+        CGEventSetFlags(event, flags)
+        postEvent(event)
+        fn()
+        CGEventSetFlags(event, CGEventFlags(rawValue: UInt64(oldFlags.rawValue))!)
+        postEvent(event)
+    }
     private func press(keycode:Int, _ flags: CGEventFlags...){
         let flag = CGEventFlags(rawValue: flags.reduce(0){$0 | $1.rawValue})!
-        for pressed in [true, false]{
-            let event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), pressed)
-            CGEventSetFlags(event, flag)
-            postEvent(event)
+        withFlags(flag){
+            for pressed in [true, false]{
+                let event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), pressed)
+                CGEventSetFlags(event, flag)
+                self.postEvent(event)
+            }
         }
     }
     private func doublePress(doubled: () -> Void, _ singled: () -> Void){
@@ -340,7 +352,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func move(dx: Int, _ dy: Int, _ flags: InputHook.Flags, _ pressed: Bool){
         switch(flags.tuple()){
         case (true, false, false, false, false):
-            if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.5){
+            if(pressed && GetCurrentEventTime() - _wokenupAt >= 1.0){
                 pressArrow(dx, dy, .FlagMaskControl)
             }
             reset()
@@ -397,7 +409,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_P: if(pressed){ press(kVK_ANSI_V, .FlagMaskCommand) }
             case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .FlagMaskCommand) }
             case kVK_ANSI_R:
-                if(pressed){
+                if(!pressed){
                     if(flags.ctrl){press(kVK_ANSI_Z, .FlagMaskCommand, .FlagMaskShift)}
                     else{press(kVK_ANSI_R, .FlagMaskCommand)}
                 }
