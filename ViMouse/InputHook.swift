@@ -24,10 +24,10 @@ class InputHook {
         static func from(flags:CGEventFlags?, aWheel:Bool = false) -> Flags{
             var result = Flags()
             if(flags != nil){
-                result.ctrl = (flags!.rawValue & CGEventFlags.FlagMaskControl.rawValue) != 0
-                result.shift = (flags!.rawValue & CGEventFlags.FlagMaskShift.rawValue) != 0
-                result.opt = (flags!.rawValue & CGEventFlags.FlagMaskAlternate.rawValue) != 0
-                result.cmd = (flags!.rawValue & CGEventFlags.FlagMaskCommand.rawValue) != 0
+                result.ctrl = (flags!.rawValue & CGEventFlags.MaskControl.rawValue) != 0
+                result.shift = (flags!.rawValue & CGEventFlags.MaskShift.rawValue) != 0
+                result.opt = (flags!.rawValue & CGEventFlags.MaskAlternate.rawValue) != 0
+                result.cmd = (flags!.rawValue & CGEventFlags.MaskCommand.rawValue) != 0
             }
             result.wheel = aWheel
             return result
@@ -35,10 +35,10 @@ class InputHook {
         func tuple() -> (Bool,Bool,Bool,Bool,Bool){return (ctrl, shift, opt, cmd, wheel)}
         func set(event:CGEvent?){
             var flags:UInt64 = 0
-            if ctrl {flags |= CGEventFlags.FlagMaskControl.rawValue}
-            if shift {flags |= CGEventFlags.FlagMaskShift.rawValue}
-            if opt {flags |= CGEventFlags.FlagMaskAlternate.rawValue}
-            if cmd {flags |= CGEventFlags.FlagMaskCommand.rawValue}
+            if ctrl {flags |= CGEventFlags.MaskControl.rawValue}
+            if shift {flags |= CGEventFlags.MaskShift.rawValue}
+            if opt {flags |= CGEventFlags.MaskAlternate.rawValue}
+            if cmd {flags |= CGEventFlags.MaskCommand.rawValue}
             CGEventSetFlags(event, CGEventFlags(rawValue: flags)!)
         }
     }
@@ -99,7 +99,7 @@ class InputHook {
         if(_port == nil){
             let key = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
             let options:Dictionary = [key: NSNumber(bool: true)]
-            if(AXIsProcessTrustedWithOptions(options as CFDictionary) != 0){
+            if(AXIsProcessTrustedWithOptions(options as CFDictionary) != false){
                 setup()
             }else{
                 return

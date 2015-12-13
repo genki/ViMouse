@@ -476,6 +476,7 @@
 		FB6B6C101B5B57C6006E606C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: s21g LLC (S47HLAL3P5)";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ViMouseUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -489,6 +490,7 @@
 		FB6B6C111B5B57C6006E606C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: s21g LLC (S47HLAL3P5)";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ViMouseUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";

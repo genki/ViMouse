@@ -21,12 +21,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _centerButton = false
     var _dx:CGFloat = 0.0, _dy:CGFloat = 0.0
     var _vx:CGFloat = 0.0, _vy:CGFloat = 0.0
-    var _ax:CGFloat = 2.0, _ay:CGFloat = -2.0
+    let _ax:CGFloat = 2.0, _ay:CGFloat = -2.0
     var _timer:NSTimer? = nil
     var _timestamp:CGEventTimestamp = 0
     var _click_state:Int64 = 1
     var _statusItem: NSStatusItem!
     var _wokenupAt:EventTime = 0
+    var _eventNumber:Int64 = 0
+    var _moveU = false
+    var _moveD = false
+    var _moveL = false
+    var _moveR = false
 
     override func awakeFromNib(){
         let bundle = NSBundle.mainBundle()
@@ -59,6 +64,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
 
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
+        _inputHook.disable()
     }
 
     // MARK: - Core Data stack
@@ -174,9 +180,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             let nserror = error as NSError
             // Customize this code block to include application-specific recovery steps.
             let result = sender.presentError(nserror)
-            if (result) {
-                return .TerminateCancel
-            }
+            if (result) {return .TerminateCancel}
             
             let question = NSLocalizedString("Could not save changes while quitting. Quit anyway?", comment: "Quit without saves error question message")
             let info = NSLocalizedString("Quitting now will lose any changes you have made since the last successful save", comment: "Quit without saves error question info");
@@ -197,7 +201,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         return .TerminateNow
     }
 
-    func applicationDidBecomeActive(notification: NSNotification) {
+    /*func applicationDidBecomeActive(notification: NSNotification) {
         _inputHook.disable()
         NSApp.activateIgnoringOtherApps(true)
         NSApp.mainWindow?.makeKeyAndOrderFront(self)
@@ -205,7 +209,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     
     func applicationDidResignActive(notification: NSNotification) {
         _inputHook.enable()
-    }
+    }*/
     func tick(){
         var displayID = CGMainDisplayID()
         var rect = CGDisplayBounds(displayID)
@@ -321,8 +325,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let event = CGEventCreateMouseEvent(nil, type, pos, button)
         if(pressed){
             doublePress({++self._click_state}, {self._click_state = 1})
+            _eventNumber++
         }
-        CGEventSetIntegerValueField(event, .MouseEventNumber, _click_state)
+        CGEventSetIntegerValueField(event, .MouseEventNumber, _eventNumber)
         CGEventSetIntegerValueField(event, .MouseEventClickState, _click_state)
         postEvent(event)
     }
@@ -338,6 +343,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _leftButton = false
         _rightButton = false
         _centerButton = false
+        _speedFast = false
+        _speedFaster = false
+        _speedSlow = false
+        _speedSlower = false
     }
     private func rawFlag(flag:CGEventFlags) -> UInt64 {return flag.rawValue}
     private func pressArrow(dx:Int, _ dy:Int, _ flags:CGEventFlags) {
@@ -352,17 +361,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func move(dx: Int, _ dy: Int, _ flags: InputHook.Flags, _ pressed: Bool){
         switch(flags.tuple()){
         case (true, false, false, false, false):
-            if(pressed && GetCurrentEventTime() - _wokenupAt >= 1.0){
-                pressArrow(dx, dy, .FlagMaskControl)
+            if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.2){
+                pressArrow(dx, dy, .MaskControl)
             }
             reset()
         case (true, true, false, true, false):
-            if(pressed){pressArrow(dx, dy, .FlagMaskCommand)}
+            if(pressed){pressArrow(dx, dy, .MaskCommand)}
         case (true, true, false, false, false):
-            if(pressed){ pressArrow(dx, dy, .FlagMaskNonCoalesced) }
+            if(pressed){pressArrow(dx, dy, .MaskNonCoalesced)}
         default:
-            if(pressed){ _dx += CGFloat(dx); _dy += CGFloat(dy) }
-            else{ _dx -= CGFloat(dx); _dy -= CGFloat(dy) }
+            switch(dx, dy){
+            case (-1, 0): _moveL = pressed
+            case (1, 0): _moveR = pressed
+            case (0, -1): _moveU = pressed
+            case (0, 1): _moveD = pressed
+            default: break
+            }
+            _dx = (_moveR ? 1:0) - (_moveL ? 1:0)
+            _dy = (_moveD ? 1:0) - (_moveU ? 1:0)
+    //        if(pressed){ _dx += CGFloat(dx); _dy += CGFloat(dy) }
+      //      else{ _dx -= CGFloat(dx); _dy -= CGFloat(dy) }
         }
     }
     private func enableMouseMode(){
@@ -383,6 +401,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     }
     func handleInput(keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool{
         if(_timer != nil){
+            if(flags.cmd){return false}
             switch(Int(keycode)){
             case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
             case kVK_ANSI_G: _inputHook.wheel = pressed
@@ -395,6 +414,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_D: _speedFast = pressed
             case kVK_ANSI_F: _speedFaster = pressed
             case kVK_Space:
+                if(flags.ctrl){return false}
                 _leftButton = pressed
                 click(pressed ? .LeftMouseDown : .LeftMouseUp, .Left, pressed)
             case kVK_ANSI_Semicolon:
@@ -405,16 +425,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             case kVK_ANSI_N:
                 _centerButton = pressed
                 click(pressed ? .OtherMouseDown : .OtherMouseUp, .Center, pressed)
-            case kVK_ANSI_Y: if(pressed){ press(kVK_ANSI_C, .FlagMaskCommand) }
-            case kVK_ANSI_P: if(pressed){ press(kVK_ANSI_V, .FlagMaskCommand) }
-            case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .FlagMaskCommand) }
+            case kVK_ANSI_Y: if(pressed){ press(kVK_ANSI_C, .MaskCommand) }
+            case kVK_ANSI_P: if(pressed){ press(kVK_ANSI_V, .MaskCommand) }
+            case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .MaskCommand) }
             case kVK_ANSI_R:
                 if(!pressed){
-                    if(flags.ctrl){press(kVK_ANSI_Z, .FlagMaskCommand, .FlagMaskShift)}
-                    else{press(kVK_ANSI_R, .FlagMaskCommand)}
+                    if(flags.ctrl){press(kVK_ANSI_Z, .MaskCommand, .MaskShift)}
+                    else{press(kVK_ANSI_R, .MaskCommand)}
                 }
-            case kVK_ANSI_U: if(pressed){ press(kVK_ANSI_Z, .FlagMaskCommand) }
-            case kVK_ANSI_Slash: if(pressed){ press(kVK_ANSI_F, .FlagMaskCommand) }
+            case kVK_ANSI_U: if(pressed){ press(kVK_ANSI_Z, .MaskCommand) }
+            case kVK_ANSI_Slash:
+                if(pressed){ press(kVK_ANSI_F, .MaskCommand) }
+                else{ disableMouseMode() }
             case kVK_JIS_Kana, kVK_JIS_Eisu:
                 if(!pressed){ disableMouseMode() }
                 return false
@@ -422,15 +444,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             }
             return true
         }else{
-            switch(Int(keycode)){
-            case kVK_ANSI_Semicolon:
-                if(flags.ctrl && !flags.shift && !flags.opt && !flags.cmd){
-                    if(!pressed){enableMouseMode()}
-                    return true
-                }
-            default: break
+            switch(Int(keycode), flags.ctrl, flags.shift, flags.opt, flags.cmd){
+            case (kVK_ANSI_Semicolon, true, false, false, false): if(!pressed){enableMouseMode()}
+            case (kVK_ANSI_H, true, true, false, false): if(!pressed){press(kVK_LeftArrow)}
+            case (kVK_ANSI_L, true, true, false, false): if(!pressed){press(kVK_RightArrow)}
+            case (kVK_ANSI_J, true, true, false, false): if(!pressed){press(kVK_DownArrow)}
+            case (kVK_ANSI_K, true, true, false, false): if(!pressed){press(kVK_UpArrow)}
+            default: return false
             }
-            return false
+            return true
         }
     }
 }
