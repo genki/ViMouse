@@ -62,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
 
         let quit = NSMenuItem()
         quit.title = "Quit"
-        quit.action = Selector("quit:")
+        quit.action = #selector(AppDelegate.quit(_:))
         menu.addItem(quit)
     }
     /*
@@ -180,11 +180,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         CGEventSetFlags(event, flags)
         postEvent(event)
         fn()
-        CGEventSetFlags(event, CGEventFlags(rawValue: UInt64(oldFlags.rawValue))!)
+        CGEventSetFlags(event, CGEventFlags(rawValue: UInt64(oldFlags.rawValue)))
         postEvent(event)
     }
     private func press(keycode:Int, _ flags: CGEventFlags...){
-        let flag = CGEventFlags(rawValue: flags.reduce(0){$0 | $1.rawValue})!
+        let flag = CGEventFlags(rawValue: flags.reduce(0){$0 | $1.rawValue})
         withFlags(flag){
             for pressed in [true, false]{
                 let event = CGEventCreateKeyboardEvent(nil, CGKeyCode(keycode), pressed)
@@ -209,7 +209,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let event = CGEventCreateMouseEvent(nil, type, pos, button)
         if(pressed){
             doublePress({++self._click_state}, {self._click_state = 1})
-            _eventNumber++
+            _eventNumber += 1
         }
         CGEventSetIntegerValueField(event, .MouseEventNumber, _eventNumber)
         CGEventSetIntegerValueField(event, .MouseEventClickState, _click_state)
@@ -271,7 +271,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         NSLog("mouse mode enabled")
         let op = NSBlockOperation(){self.tick()}
         _timer = NSTimer.scheduledTimerWithTimeInterval(0.015, target: op,
-            selector: "main", userInfo: nil, repeats: true)
+            selector: #selector(NSOperation.main), userInfo: nil, repeats: true)
         _statusItem.button!.highlighted = true
         _wokenupAt = GetCurrentEventTime()
         reset()

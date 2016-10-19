@@ -39,7 +39,7 @@ class InputHook {
             if shift {flags |= CGEventFlags.MaskShift.rawValue}
             if opt {flags |= CGEventFlags.MaskAlternate.rawValue}
             if cmd {flags |= CGEventFlags.MaskCommand.rawValue}
-            CGEventSetFlags(event, CGEventFlags(rawValue: flags)!)
+            CGEventSetFlags(event, CGEventFlags(rawValue: flags))
         }
     }
     let pid = NSProcessInfo.processInfo().processIdentifier
@@ -52,7 +52,7 @@ class InputHook {
     var _flags = Flags()
     
     let _callback: CGEventTapCallBack = {(proxy, type, event, arg) -> Unmanaged<CGEvent>? in
-        let this = Unmanaged<InputHook>.fromOpaque(COpaquePointer(arg)).takeUnretainedValue()
+        let this = Unmanaged<InputHook>.fromOpaque(_:COpaquePointer(arg)).takeUnretainedValue()
         let pid = CGEventGetIntegerValueField(event, .EventSourceUnixProcessID)
         if(Int32(pid) != this.pid){
             switch(type){
