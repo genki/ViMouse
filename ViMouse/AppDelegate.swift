@@ -208,7 +208,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let pos = CGPointMake(p.x, rect.size.height - p.y)
         let event = CGEventCreateMouseEvent(nil, type, pos, button)
         if(pressed){
-            doublePress({++self._click_state}, {self._click_state = 1})
+            doublePress({self._click_state += 1}, {self._click_state = 1})
             _eventNumber += 1
         }
         CGEventSetIntegerValueField(event, .MouseEventNumber, _eventNumber)
@@ -242,17 +242,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         default: break
         }
     }
+    func runMissionControl(args:[String]){
+        let task = NSTask()
+        task.launchPath = "/Applications/Mission Control.app/Contents/MacOS/Mission Control"
+        task.arguments = args
+        task.launch()
+    }
     func move(dx: Int, _ dy: Int, _ flags: InputHook.Flags, _ pressed: Bool){
         switch(flags.tuple()){
+        //ctrl, shift, opt, cmd, wheel
         case (true, false, false, false, false):
             if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.2){
                 pressArrow(dx, dy, .MaskControl)
+                /*switch(dx, dy){
+                case (-1, 0): spaces_movetospace(-1)
+                case(1, 0): spaces_movetospace(1)
+                case (0, 1): runMissionControl(["2"])
+                case (0, -1): runMissionControl(["3"])
+                default: break
+                }*/
             }
             reset()
         case (true, true, false, true, false):
             if(pressed){pressArrow(dx, dy, .MaskCommand)}
-        case (true, true, false, false, false):
-            if(pressed){pressArrow(dx, dy, .MaskNonCoalesced)}
+        //case (true, false, false, true, false):
+        //    if(pressed){pressArrow(dx, dy, .MaskNonCoalesced)}
         default:
             switch(dx, dy){
             case (-1, 0): _moveL = pressed
@@ -286,6 +300,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func handleInput(keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool{
         if(_timer != nil){
             if(flags.cmd){return false}
+            if(flags.ctrl && flags.shift){return false}
             switch(Int(keycode)){
             case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
             case kVK_ANSI_G: _inputHook.wheel = pressed

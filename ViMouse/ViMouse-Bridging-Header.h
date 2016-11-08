@@ -5,3 +5,4 @@
 #import <Carbon/Carbon.h>
 
 CGEventRef VMCreateMouseWheelEvent(NSInteger wv, NSInteger wh);
+int spaces_movetospace(NSInteger dx);
