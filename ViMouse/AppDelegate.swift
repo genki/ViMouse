@@ -253,13 +253,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         //ctrl, shift, opt, cmd, wheel
         case (true, false, false, false, false):
             if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.2){
-                //pressArrow(dx, dy, .MaskControl)
-                switch(dx,dy){
+                pressArrow(dx, dy, .MaskControl)
+                /*switch(dx,dy){
                 case (0, -1):
                     press(kVK_Tab, CGEventFlags(rawValue:CGEventFlags.MaskControl.rawValue | CGEventFlags.MaskShift.rawValue))
                 case (0, 1): press(kVK_Tab, .MaskControl)
                 default: break
-                }
+                }*/
                 /*switch(dx, dy){
                 case (-1, 0): spaces_movetospace(-1)
                 case(1, 0): spaces_movetospace(1)
