@@ -10,7 +10,7 @@ import Cocoa
 import CoreGraphics
 
 protocol InputHookDelegate {
-    func handleInput(keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool
+    func handleInput(_ keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool
 }
 
 class InputHook {
@@ -21,28 +21,28 @@ class InputHook {
         var cmd = false
         var wheel = false
         
-        static func from(flags:CGEventFlags?, aWheel:Bool = false) -> Flags{
+        static func from(_ flags:CGEventFlags?, aWheel:Bool = false) -> Flags{
             var result = Flags()
             if(flags != nil){
-                result.ctrl = (flags!.rawValue & CGEventFlags.MaskControl.rawValue) != 0
-                result.shift = (flags!.rawValue & CGEventFlags.MaskShift.rawValue) != 0
-                result.opt = (flags!.rawValue & CGEventFlags.MaskAlternate.rawValue) != 0
-                result.cmd = (flags!.rawValue & CGEventFlags.MaskCommand.rawValue) != 0
+                result.ctrl = (flags!.rawValue & CGEventFlags.maskControl.rawValue) != 0
+                result.shift = (flags!.rawValue & CGEventFlags.maskShift.rawValue) != 0
+                result.opt = (flags!.rawValue & CGEventFlags.maskAlternate.rawValue) != 0
+                result.cmd = (flags!.rawValue & CGEventFlags.maskCommand.rawValue) != 0
             }
             result.wheel = aWheel
             return result
         }
         func tuple() -> (Bool,Bool,Bool,Bool,Bool){return (ctrl, shift, opt, cmd, wheel)}
-        func set(event:CGEvent?){
+        func set(_ event:CGEvent?){
             var flags:UInt64 = 0
-            if ctrl {flags |= CGEventFlags.MaskControl.rawValue}
-            if shift {flags |= CGEventFlags.MaskShift.rawValue}
-            if opt {flags |= CGEventFlags.MaskAlternate.rawValue}
-            if cmd {flags |= CGEventFlags.MaskCommand.rawValue}
-            CGEventSetFlags(event, CGEventFlags(rawValue: flags))
+            if ctrl {flags |= CGEventFlags.maskControl.rawValue}
+            if shift {flags |= CGEventFlags.maskShift.rawValue}
+            if opt {flags |= CGEventFlags.maskAlternate.rawValue}
+            if cmd {flags |= CGEventFlags.maskCommand.rawValue}
+            event?.flags = CGEventFlags(rawValue: flags)
         }
     }
-    let pid = NSProcessInfo.processInfo().processIdentifier
+    let pid = ProcessInfo.processInfo.processIdentifier
     var wheel:Bool {
         get{return _flags.wheel}
         set(aWheel){_flags.wheel = aWheel}
@@ -52,13 +52,13 @@ class InputHook {
     var _flags = Flags()
     
     let _callback: CGEventTapCallBack = {(proxy, type, event, arg) -> Unmanaged<CGEvent>? in
-        let this = Unmanaged<InputHook>.fromOpaque(_:COpaquePointer(arg)).takeUnretainedValue()
-        let pid = CGEventGetIntegerValueField(event, .EventSourceUnixProcessID)
+        let this = Unmanaged<InputHook>.fromOpaque(_:arg!).takeUnretainedValue()
+        let pid = event.getIntegerValueField(.eventSourceUnixProcessID)
         if(Int32(pid) != this.pid){
             switch(type){
-            case .KeyDown: if(this.keyDown(event)){return nil}
-            case .KeyUp: if(this.keyUp(event)){return nil}
-            case .FlagsChanged: this._flags = Flags.from(CGEventGetFlags(event))
+            case .keyDown: if(this.keyDown(event)){return nil}
+            case .keyUp: if(this.keyUp(event)){return nil}
+            case .flagsChanged: this._flags = Flags.from(event.flags)
             default: break
             }
         }
@@ -67,8 +67,8 @@ class InputHook {
     
     var delegate: InputHookDelegate?
 
-    func keyDown(event: CGEvent) -> Bool {
-        let keycode = CGEventGetIntegerValueField(event, .KeyboardEventKeycode)
+    func keyDown(_ event: CGEvent) -> Bool {
+        let keycode = event.getIntegerValueField(.keyboardEventKeycode)
         let pressed = _pressed[keycode]
         if(pressed == nil){
             let result = (self.delegate?.handleInput(keycode, _flags, true))!
@@ -78,38 +78,38 @@ class InputHook {
             return pressed!.0
         }
     }
-    func keyUp(event: CGEvent) -> Bool {
-        let keycode = CGEventGetIntegerValueField(event, .KeyboardEventKeycode)
-        let pressed = _pressed.removeValueForKey(keycode)
+    func keyUp(_ event: CGEvent) -> Bool {
+        let keycode = event.getIntegerValueField(.keyboardEventKeycode)
+        let pressed = _pressed.removeValue(forKey: keycode)
         if(pressed != nil){
             return (self.delegate?.handleInput(keycode, pressed!.1, false))!
         }
         return false
     }
     func setup(){
-        let types:[CGEventType] = [.KeyDown, .KeyUp, .FlagsChanged]
+        let types:[CGEventType] = [.keyDown, .keyUp, .flagsChanged]
         let mask = types.reduce(0){$0 | CGEventMask(1 << $1.rawValue)}
         //| CGEventMask(UInt64.max)
-        _port = CGEventTapCreate(.CGHIDEventTap, .HeadInsertEventTap, .Default,
-            mask, _callback, UnsafeMutablePointer(Unmanaged.passUnretained(self).toOpaque()))!
+        _port = CGEvent.tapCreate(tap: .cghidEventTap, place: .headInsertEventTap, options: .defaultTap,
+            eventsOfInterest: mask, callback: _callback, userInfo: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()))!
         let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, _port, 0)
-        CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode)
+        CFRunLoopAddSource(CFRunLoopGetCurrent(), source, CFRunLoopMode.defaultMode)
     }
     func enable(){
         if(_port == nil){
             let key = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
-            let options:Dictionary = [key: NSNumber(bool: true)]
+            let options:Dictionary = [key: NSNumber(value: true as Bool)]
             if(AXIsProcessTrustedWithOptions(options as CFDictionary) != false){
                 setup()
             }else{
                 return
             }
         }
-        CGEventTapEnable(_port!, true)
+        CGEvent.tapEnable(tap: _port!, enable: true)
     }
     func disable(){
         if(_port != nil){
-            CGEventTapEnable(_port!, false)
+            CGEvent.tapEnable(tap: _port!, enable: false)
         }
     }
 }
