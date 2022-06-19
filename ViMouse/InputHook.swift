@@ -19,6 +19,7 @@ class InputHook {
         var shift = false
         var opt = false
         var cmd = false
+        var fnc = false
         var wheel = false
         
         static func from(_ flags:CGEventFlags?, aWheel:Bool = false) -> Flags{
@@ -28,17 +29,21 @@ class InputHook {
                 result.shift = (flags!.rawValue & CGEventFlags.maskShift.rawValue) != 0
                 result.opt = (flags!.rawValue & CGEventFlags.maskAlternate.rawValue) != 0
                 result.cmd = (flags!.rawValue & CGEventFlags.maskCommand.rawValue) != 0
+                result.fnc = (flags!.rawValue & CGEventFlags.maskSecondaryFn.rawValue) != 0
             }
             result.wheel = aWheel
             return result
         }
-        func tuple() -> (Bool,Bool,Bool,Bool,Bool){return (ctrl, shift, opt, cmd, wheel)}
+        func tuple() -> (Bool,Bool,Bool,Bool,Bool,Bool){
+            return (ctrl, shift, opt, cmd, fnc, wheel)
+        }
         func set(_ event:CGEvent?){
             var flags:UInt64 = 0
             if ctrl {flags |= CGEventFlags.maskControl.rawValue}
             if shift {flags |= CGEventFlags.maskShift.rawValue}
             if opt {flags |= CGEventFlags.maskAlternate.rawValue}
             if cmd {flags |= CGEventFlags.maskCommand.rawValue}
+            if fnc {flags |= CGEventFlags.maskSecondaryFn.rawValue}
             event?.flags = CGEventFlags(rawValue: flags)
         }
     }

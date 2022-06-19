@@ -38,18 +38,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let bundle = Bundle.main
         let bundleID = bundle.bundleIdentifier
         let appURL = bundle.executableURL
-        for app in NSWorkspace.shared().runningApplications {
+        for app in NSWorkspace.shared.runningApplications {
             if(app.processIdentifier == _inputHook.pid){ continue }
             if(app.executableURL == appURL){ NSApp.terminate(self) }
             if(app.bundleIdentifier == bundleID){ NSApp.terminate(self) }
         }
         
-        let statusBar = NSStatusBar.system()
-        _statusItem = statusBar.statusItem(withLength: CGFloat(NSVariableStatusItemLength))
-        let icon = NSImage(named:"Icon")!
-        icon.isTemplate = true
-        icon.resizingMode = .stretch
-        icon.size = NSSize(width: 16, height: 16)
+        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String : true]
+        let accessEnabled = AXIsProcessTrustedWithOptions(options)
+        if !accessEnabled {
+            print("Access Not Enabled")
+            NSApp.terminate(self)
+        }
+        
+        let statusBar = NSStatusBar.system
+        _statusItem = statusBar.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
+        let icon = NSImage(named: NSImage.Name("Icon"))
+        icon?.isTemplate = true
+        icon?.resizingMode = .stretch
+        icon?.size = NSSize(width: 16, height: 16)
         _statusItem.image = icon
         
         let menu = NSMenu()
@@ -97,7 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func tick(){
         var displayID = CGMainDisplayID()
         var rect = CGDisplayBounds(displayID)
-        var p = NSEvent.mouseLocation()
+        var p = NSEvent.mouseLocation
         var dx = _dx, dy = _dy
         
         // normalize deltas
@@ -174,7 +181,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _click_state = 1
     }
     fileprivate func withFlags(_ flags:CGEventFlags, fn:() -> Void){
-        let oldFlags = NSEvent.modifierFlags()
+        let oldFlags = NSEvent.modifierFlags
         let event = CGEvent(source: nil)
         event?.type = .flagsChanged
         event?.flags = flags
@@ -200,7 +207,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _timestamp = timestamp
     }
     func click(_ type:CGEventType, _ button:CGMouseButton, _ pressed:Bool){
-        let p = NSEvent.mouseLocation()
+        let p = NSEvent.mouseLocation
         var displayID:CGDirectDisplayID = 0
         var displayCount:CGDisplayCount = 0
         CGGetActiveDisplayList(1, &displayID, &displayCount)
@@ -250,8 +257,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     }
     func move(_ dx: Int, _ dy: Int, _ flags: InputHook.Flags, _ pressed: Bool){
         switch(flags.tuple()){
-        //ctrl, shift, opt, cmd, wheel
-        case (true, false, false, false, false):
+        //ctrl, shift, opt, cmd, fnc, wheel
+        case (true, false, false, false, false, false):
             if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.2){
                 pressArrow(dx, dy, .maskControl)
                 /*switch(dx,dy){
@@ -269,7 +276,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
                 }*/
             }
             reset()
-        case (true, true, false, true, false):
+        case (true, true, false, true, false, false):
             if(pressed){pressArrow(dx, dy, .maskCommand)}
         //case (true, false, false, true, false):
         //    if(pressed){pressArrow(dx, dy, .MaskNonCoalesced)}
@@ -349,12 +356,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             }
             return true
         }else{
-            switch(Int(keycode), flags.ctrl, flags.shift, flags.opt, flags.cmd){
-            case (kVK_ANSI_Semicolon, true, false, false, false): if(!pressed){enableMouseMode()}
-            case (kVK_ANSI_H, true, true, false, false): if(!pressed){press(kVK_LeftArrow)}
-            case (kVK_ANSI_L, true, true, false, false): if(!pressed){press(kVK_RightArrow)}
-            case (kVK_ANSI_J, true, true, false, false): if(!pressed){press(kVK_DownArrow)}
-            case (kVK_ANSI_K, true, true, false, false): if(!pressed){press(kVK_UpArrow)}
+            switch(Int(keycode), flags.ctrl, flags.shift, flags.opt, flags.cmd, flags.fnc){
+            case (kVK_ANSI_Semicolon, true, false, false, false, false): fallthrough
+            case (kVK_ANSI_Semicolon, false, false, false, false, true):
+                if(!pressed){enableMouseMode()}
+            case (kVK_ANSI_H, true, true, false, false, false):
+                if(!pressed){press(kVK_LeftArrow)}
+            case (kVK_ANSI_L, true, true, false, false, false): if(!pressed){press(kVK_RightArrow)}
+            case (kVK_ANSI_J, true, true, false, false, false): if(!pressed){press(kVK_DownArrow)}
+            case (kVK_ANSI_K, true, true, false, false, false): if(!pressed){press(kVK_UpArrow)}
             default: return false
             }
             return true
