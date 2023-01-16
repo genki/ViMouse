@@ -28,4 +28,4 @@ This product is tuned up for me, so I recommend you to see the source and adjust
 
 ## Key mapping in Input mode
 * `^;`, `<fn>;`: switch to Normal mode;
-* `^h`, `^j`, `^k`, `^l`: acts as arrow keys
+* `^H`, `^J`, `^K`, `^L`: acts as arrow keys
