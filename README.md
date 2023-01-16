@@ -23,7 +23,8 @@ This product is tuned up for me, so I recommend you to see the source and adjust
 * `g`: Acts as mouse wheel. Use combined with `h`,`j`,`k`,`l` and `a`, `s`, `d`, `f`.
 * `y`: Yank
 * `p`: Paste
-* `u`: Undo
+* `u`: Undo 
+* `r`: ⌘R, typically reload.
 
 ## Key mapping in Input mode
 * `^ ;`, `<fn> ;`: switch to Normal mode;
