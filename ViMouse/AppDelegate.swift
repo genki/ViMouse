@@ -29,10 +29,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _statusItem: NSStatusItem!
     var _wokenupAt:EventTime = 0
     var _eventNumber:Int64 = 0
+    var _normalIcon:NSImage
+    var _activeIcon:NSImage
     var _moveU = false
     var _moveD = false
     var _moveL = false
     var _moveR = false
+    
+    override init() {
+        let size = NSSize(width: 16,height: 16)
+        _normalIcon = NSImage(named: NSImage.Name("Icon"))!
+        _normalIcon.isTemplate = true
+        _normalIcon.resizingMode = .stretch
+        _normalIcon.size = size
+        
+        // active icon
+        let tintColor = NSColor(red: 0.1, green: 0.5, blue: 1.0, alpha: 1.0)
+        _activeIcon = (_normalIcon.copy() as? NSImage)!
+        _activeIcon.lockFocus()
+        tintColor.set()
+        let rect = NSRect(origin:CGPoint.zero, size:size)
+        rect.fill(using:NSCompositingOperation.sourceAtop)
+        _activeIcon.unlockFocus()
+        _activeIcon.isTemplate = false
+    }
 
     override func awakeFromNib(){
         let bundle = Bundle.main
@@ -40,8 +60,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let appURL = bundle.executableURL
         for app in NSWorkspace.shared.runningApplications {
             if(app.processIdentifier == _inputHook.pid){ continue }
-            if(app.executableURL == appURL){ NSApp.terminate(self) }
-            if(app.bundleIdentifier == bundleID){ NSApp.terminate(self) }
+            if(app.executableURL == appURL){ app.terminate() }
+            if(app.bundleIdentifier == bundleID){ app.terminate() }
         }
         
         let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String : true]
@@ -53,11 +73,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         
         let statusBar = NSStatusBar.system
         _statusItem = statusBar.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
-        let icon = NSImage(named: NSImage.Name("Icon"))
-        icon?.isTemplate = true
-        icon?.resizingMode = .stretch
-        icon?.size = NSSize(width: 16, height: 16)
-        _statusItem.image = icon
+        _statusItem.image = _normalIcon
         
         let menu = NSMenu()
         _statusItem.menu = menu
@@ -257,7 +273,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     }
     func move(_ dx: Int, _ dy: Int, _ flags: InputHook.Flags, _ pressed: Bool){
         switch(flags.tuple()){
-        //ctrl, shift, opt, cmd, fnc, wheel
+        //   (ctrl, shift, opt  , cmd  , fnc  , wheel)
         case (true, false, false, false, false, false):
             if(pressed && GetCurrentEventTime() - _wokenupAt >= 0.2){
                 pressArrow(dx, dy, .maskControl)
@@ -299,7 +315,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let op = BlockOperation(){self.tick()}
         _timer = Timer.scheduledTimer(timeInterval: 0.015, target: op,
             selector: #selector(Operation.main), userInfo: nil, repeats: true)
-        _statusItem.button!.isHighlighted = true
+        _statusItem.image = _activeIcon
         _wokenupAt = GetCurrentEventTime()
         reset()
     }
@@ -308,10 +324,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _timer = nil
         reset()
         NSLog("mouse mode disabled")
-        _statusItem.button!.isHighlighted = false
+        _statusItem.image = _normalIcon
     }
     func handleInput(_ keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool{
         if(_timer != nil){
+            // mouse mode
             if(flags.cmd){return false}
             if(flags.ctrl && flags.shift){return false}
             switch(Int(keycode)){
@@ -356,6 +373,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             }
             return true
         }else{
+            // keyboard mode
             switch(Int(keycode), flags.ctrl, flags.shift, flags.opt, flags.cmd, flags.fnc){
             case (kVK_ANSI_Semicolon, true, false, false, false, false): fallthrough
             case (kVK_ANSI_Semicolon, false, false, false, false, true):
