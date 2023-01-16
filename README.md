@@ -20,6 +20,7 @@ This product is tuned up for me, so I recommend you to see the source and adjust
 * `s`: Slow cursor speed
 * `d`: Fast cursor speed
 * `f`: Very fast cursor speed
+* `g`: Acts as mouse wheel. Use combined with `h`,`j`,`k`,`l` and `a`, `s`, `d`, `f`.
 * `y`: Yank
 * `p`: Paste
 * `u`: Undo
