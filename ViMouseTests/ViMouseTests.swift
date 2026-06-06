@@ -6,6 +6,7 @@
 //  Copyright © 2015年 s21g Inc. All rights reserved.
 //
 
+import Carbon
 import XCTest
 
 class ViMouseTests: XCTestCase {
@@ -62,6 +63,17 @@ class ViMouseTests: XCTestCase {
         XCTAssertFalse(hook.keyDown(down))
         XCTAssertFalse(hook.keyDown(down))
         XCTAssertEqual(delegate.calls.map(\.pressed), [true])
+    }
+
+    func testKeyMappingStoresAndResetsCustomKeyCodes() {
+        KeyMapping.resetDefaults()
+        XCTAssertEqual(KeyMapping.keyCode(for: .moveLeft), kVK_ANSI_H)
+
+        KeyMapping.setKeyCode(kVK_ANSI_A, for: .moveLeft)
+        XCTAssertEqual(KeyMapping.keyCode(for: .moveLeft), kVK_ANSI_A)
+
+        KeyMapping.resetDefaults()
+        XCTAssertEqual(KeyMapping.keyCode(for: .moveLeft), kVK_ANSI_H)
     }
 }
 

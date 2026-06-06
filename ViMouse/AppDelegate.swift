@@ -35,6 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _moveD = false
     var _moveL = false
     var _moveR = false
+    var _settingsWindowController: SettingsWindowController?
     
     override init() {
         let size = NSSize(width: 16,height: 16)
@@ -82,13 +83,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         let menu = NSMenu()
         _statusItem.menu = menu
         
-        /*let pref = NSMenuItem()
-        pref.title = "Preferences"
-        pref.action = Selector("config:")
-        menu.addItem(pref)*/
+        let settings = NSMenuItem()
+        settings.title = localized("menu.settings")
+        settings.action = #selector(AppDelegate.showSettings(_:))
+        settings.target = self
+        menu.addItem(settings)
+        menu.addItem(NSMenuItem.separator())
 
         let quit = NSMenuItem()
-        quit.title = "Quit"
+        quit.title = localized("menu.quit")
         quit.action = #selector(AppDelegate.quit(_:))
         menu.addItem(quit)
     }
@@ -100,11 +103,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     @IBAction func quit(_ sender: NSButton) {
         NSApp.terminate(self)
     }
+
+    @IBAction func showSettings(_ sender: Any) {
+        if _settingsWindowController == nil {
+            _settingsWindowController = SettingsWindowController()
+        }
+
+        guard let window = _settingsWindowController?.window else { return }
+        _settingsWindowController?.reloadControls()
+        NSApp.activate(ignoringOtherApps: true)
+        window.makeKeyAndOrderFront(sender)
+        NSApp.runModal(for: window)
+    }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         _inputHook.delegate = self
-        _inputHook.enable()        
+        _inputHook.enable()
+        if ProcessInfo.processInfo.environment["VIMOUSE_SHOW_SETTINGS_ON_LAUNCH"] == "1" {
+            DispatchQueue.main.async {
+                self.showSettings(self)
+            }
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -311,43 +331,44 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _statusItem.image = _normalIcon
     }
     func handleInput(_ keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool{
+        let key = Int(keycode)
         if(_timer != nil){
             // mouse mode
             if(flags.cmd){return false}
             if(flags.ctrl && flags.shift){return false}
-            switch(Int(keycode)){
-            case kVK_ANSI_I: if(!pressed){ disableMouseMode() }
-            case kVK_ANSI_G: _inputHook.wheel = pressed
-            case kVK_ANSI_H: move(-1, 0, flags, pressed)
-            case kVK_ANSI_J: move(0, 1, flags, pressed)
-            case kVK_ANSI_K: move(0, -1, flags, pressed)
-            case kVK_ANSI_L: move(1, 0, flags, pressed)
-            case kVK_ANSI_A: _speedSlower = pressed
-            case kVK_ANSI_S: _speedSlow = pressed
-            case kVK_ANSI_D: _speedFast = pressed
-            case kVK_ANSI_F: _speedFaster = pressed
-            case kVK_Space:
+            switch key {
+            case KeyMapping.keyCode(for: .exitMouseMode): if(!pressed){ disableMouseMode() }
+            case KeyMapping.keyCode(for: .wheel): _inputHook.wheel = pressed
+            case KeyMapping.keyCode(for: .moveLeft): move(-1, 0, flags, pressed)
+            case KeyMapping.keyCode(for: .moveDown): move(0, 1, flags, pressed)
+            case KeyMapping.keyCode(for: .moveUp): move(0, -1, flags, pressed)
+            case KeyMapping.keyCode(for: .moveRight): move(1, 0, flags, pressed)
+            case KeyMapping.keyCode(for: .verySlow): _speedSlower = pressed
+            case KeyMapping.keyCode(for: .slow): _speedSlow = pressed
+            case KeyMapping.keyCode(for: .fast): _speedFast = pressed
+            case KeyMapping.keyCode(for: .veryFast): _speedFaster = pressed
+            case KeyMapping.keyCode(for: .leftClick):
                 if(flags.ctrl){return false}
                 _leftButton = pressed
                 click(pressed ? .leftMouseDown : .leftMouseUp, .left, pressed)
-            case kVK_ANSI_Semicolon:
+            case KeyMapping.keyCode(for: .rightClick):
                 if(!flags.ctrl){
                     _rightButton = pressed
                     click(pressed ? .rightMouseDown : .rightMouseUp, .right, pressed)
                 }
-            case kVK_ANSI_N:
+            case KeyMapping.keyCode(for: .middleClick):
                 _centerButton = pressed
                 click(pressed ? .otherMouseDown : .otherMouseUp, .center, pressed)
-            case kVK_ANSI_Y: if(pressed){ press(kVK_ANSI_C, .maskCommand) }
-            case kVK_ANSI_P: if(pressed){ press(kVK_ANSI_V, .maskCommand) }
-            case kVK_ANSI_X: if(pressed){ press(kVK_ANSI_X, .maskCommand) }
-            case kVK_ANSI_R:
+            case KeyMapping.keyCode(for: .yank): if(pressed){ press(kVK_ANSI_C, .maskCommand) }
+            case KeyMapping.keyCode(for: .paste): if(pressed){ press(kVK_ANSI_V, .maskCommand) }
+            case KeyMapping.keyCode(for: .cut): if(pressed){ press(kVK_ANSI_X, .maskCommand) }
+            case KeyMapping.keyCode(for: .reload):
                 if(!pressed){
                     if(flags.ctrl){press(kVK_ANSI_Z, .maskCommand, .maskShift)}
                     else{press(kVK_ANSI_R, .maskCommand)}
                 }
-            case kVK_ANSI_U: if(pressed){ press(kVK_ANSI_Z, .maskCommand) }
-            case kVK_ANSI_Slash:
+            case KeyMapping.keyCode(for: .undo): if(pressed){ press(kVK_ANSI_Z, .maskCommand) }
+            case KeyMapping.keyCode(for: .find):
                 if(pressed){ press(kVK_ANSI_F, .maskCommand) }
                 else{ disableMouseMode() }
             case kVK_JIS_Kana, kVK_JIS_Eisu:
@@ -358,18 +379,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
             return true
         }else{
             // keyboard mode
-            switch(Int(keycode), flags.ctrl, flags.shift, flags.opt, flags.cmd, flags.fnc){
-            case (kVK_ANSI_Semicolon, true, false, false, false, false): fallthrough
-            case (kVK_ANSI_Semicolon, false, false, false, false, true):
+            switch(key, flags.ctrl, flags.shift, flags.opt, flags.cmd, flags.fnc){
+            case (KeyMapping.keyCode(for: .enterMouseMode), true, false, false, false, false): fallthrough
+            case (KeyMapping.keyCode(for: .enterMouseMode), false, false, false, false, true):
                 if(!pressed){enableMouseMode()}
-            case (kVK_ANSI_H, true, true, false, false, false):
+            case (KeyMapping.keyCode(for: .moveLeft), true, true, false, false, false):
                 if(!pressed){press(kVK_LeftArrow)}
-            case (kVK_ANSI_L, true, true, false, false, false): if(!pressed){press(kVK_RightArrow)}
-            case (kVK_ANSI_J, true, true, false, false, false): if(!pressed){press(kVK_DownArrow)}
-            case (kVK_ANSI_K, true, true, false, false, false): if(!pressed){press(kVK_UpArrow)}
+            case (KeyMapping.keyCode(for: .moveRight), true, true, false, false, false): if(!pressed){press(kVK_RightArrow)}
+            case (KeyMapping.keyCode(for: .moveDown), true, true, false, false, false): if(!pressed){press(kVK_DownArrow)}
+            case (KeyMapping.keyCode(for: .moveUp), true, true, false, false, false): if(!pressed){press(kVK_UpArrow)}
             default: return false
             }
             return true
         }
     }
+}
+
+private func localized(_ key: String) -> String {
+    NSLocalizedString(key, comment: "")
 }

@@ -1,0 +1,36 @@
+"menu.settings" = "設定...";
+"menu.quit" = "終了";
+
+"settings.window.title" = "ViMouse 設定";
+"settings.keyMapping.title" = "キーマッピング";
+"settings.resetDefaults.button" = "デフォルトに戻す";
+"settings.done.button" = "完了";
+
+"keyMapping.enterMouseMode.title" = "マウスモードへ切替";
+"keyMapping.exitMouseMode.title" = "マウスモードを終了";
+"keyMapping.moveLeft.title" = "左へ移動";
+"keyMapping.moveDown.title" = "下へ移動";
+"keyMapping.moveUp.title" = "上へ移動";
+"keyMapping.moveRight.title" = "右へ移動";
+"keyMapping.wheel.title" = "ホイール修飾";
+"keyMapping.leftClick.title" = "左クリック";
+"keyMapping.rightClick.title" = "右クリック";
+"keyMapping.middleClick.title" = "中クリック";
+"keyMapping.verySlow.title" = "とても遅い";
+"keyMapping.slow.title" = "遅い";
+"keyMapping.fast.title" = "速い";
+"keyMapping.veryFast.title" = "とても速い";
+"keyMapping.yank.title" = "ヤンク";
+"keyMapping.paste.title" = "ペースト";
+"keyMapping.cut.title" = "カット";
+"keyMapping.reload.title" = "リロード";
+"keyMapping.undo.title" = "取り消し";
+"keyMapping.find.title" = "検索";
+
+"keyMapping.enterMouseMode.detail" = "入力モード: Ctrl+キーまたは Fn+キー";
+"keyMapping.mouseMode.detail" = "マウスモード";
+"keyMapping.movement.detail" = "マウスモード移動。入力モードでは Ctrl+Shift で矢印キー";
+"keyMapping.speed.detail" = "マウスモードの速度";
+"keyMapping.command.detail" = "マウスモードのコマンド";
+
+"keyChoice.space" = "スペース";

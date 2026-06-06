@@ -1,0 +1,36 @@
+"menu.settings" = "Settings...";
+"menu.quit" = "Quit";
+
+"settings.window.title" = "ViMouse Settings";
+"settings.keyMapping.title" = "Key Mapping";
+"settings.resetDefaults.button" = "Reset Defaults";
+"settings.done.button" = "Done";
+
+"keyMapping.enterMouseMode.title" = "Enter mouse mode";
+"keyMapping.exitMouseMode.title" = "Exit mouse mode";
+"keyMapping.moveLeft.title" = "Move left";
+"keyMapping.moveDown.title" = "Move down";
+"keyMapping.moveUp.title" = "Move up";
+"keyMapping.moveRight.title" = "Move right";
+"keyMapping.wheel.title" = "Wheel modifier";
+"keyMapping.leftClick.title" = "Left click";
+"keyMapping.rightClick.title" = "Right click";
+"keyMapping.middleClick.title" = "Middle click";
+"keyMapping.verySlow.title" = "Very slow";
+"keyMapping.slow.title" = "Slow";
+"keyMapping.fast.title" = "Fast";
+"keyMapping.veryFast.title" = "Very fast";
+"keyMapping.yank.title" = "Yank";
+"keyMapping.paste.title" = "Paste";
+"keyMapping.cut.title" = "Cut";
+"keyMapping.reload.title" = "Reload";
+"keyMapping.undo.title" = "Undo";
+"keyMapping.find.title" = "Find";
+
+"keyMapping.enterMouseMode.detail" = "Input mode: Ctrl+key or Fn+key";
+"keyMapping.mouseMode.detail" = "Mouse mode";
+"keyMapping.movement.detail" = "Mouse mode movement; Ctrl+Shift in Input mode sends arrows";
+"keyMapping.speed.detail" = "Mouse mode speed";
+"keyMapping.command.detail" = "Mouse mode command";
+
+"keyChoice.space" = "Space";
