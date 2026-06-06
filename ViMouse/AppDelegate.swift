@@ -9,7 +9,7 @@
 import Cocoa
 import CoreGraphics
 
-@NSApplicationMain
+@main
 class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _inputHook = InputHook()
     var _speedSlower = false
@@ -54,18 +54,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _activeIcon.isTemplate = false
     }
 
-    override func awakeFromNib(){
+    override func awakeFromNib() {
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+            return
+        }
+
         let bundle = Bundle.main
         let bundleID = bundle.bundleIdentifier
         let appURL = bundle.executableURL
         for app in NSWorkspace.shared.runningApplications {
-            if(app.processIdentifier == _inputHook.pid){ continue }
-            if(app.executableURL == appURL){ app.terminate() }
-            if(app.bundleIdentifier == bundleID){ app.terminate() }
+            if(app.processIdentifier == _inputHook.pid) { continue }
+            if(app.executableURL == appURL) { app.terminate() }
+            if(app.bundleIdentifier == bundleID) { app.terminate() }
         }
         
-        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String : true]
-        let accessEnabled = AXIsProcessTrustedWithOptions(options)
+        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
+        let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary)
         if !accessEnabled {
             print("Access Not Enabled")
             NSApp.terminate(self)
@@ -117,15 +121,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     func applicationDidResignActive(_ notification: Notification) {
         _inputHook.enable()
     }
-    func tick(){
-        var displayID = CGMainDisplayID()
-        var rect = CGDisplayBounds(displayID)
-        var p = NSEvent.mouseLocation
+    func tick() {
+        let current = CGEvent(source: nil)?.location ?? NSEvent.mouseLocation
         var dx = _dx, dy = _dy
         
         // normalize deltas
-        let s = sqrt(dx*dx + dy*dy);
-        if(s < 0.5){
+        let s = sqrt(dx*dx + dy*dy)
+        if(s < 0.5) {
             _vx = 0
             _vy = 0
             return
@@ -147,7 +149,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         if(_speedSlow){ vx /= 2; vy /= 2 }
         if(_speedSlower){ vx /= 4; vy /= 4 }
         
-        if(_inputHook.wheel){
+        if(_inputHook.wheel) {
             let wv = Int(vy*2), wh = Int(-vx*2)
             let event = VMCreateMouseWheelEvent(wv, wh)
             postEvent(event?.takeUnretainedValue())
@@ -156,39 +158,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }
 
         // move
-        var pos = CGPoint(x:p.x + vx, y:rect.size.height - p.y - vy);
-        p.x += vx;
-        p.y += vy;
-        
-        // check boundary
-        var displayCount:UInt32 = 0;
-        CGGetDisplaysWithPoint(pos, 1, &displayID, &displayCount);
-        if (displayCount == 0) {
-            CGGetDisplaysWithPoint(CGPoint(x: p.x, y: p.y), 1, &displayID, &displayCount)
-            rect = CGDisplayBounds(displayID)
-            if (pos.x < rect.origin.x) {
-                pos.x = rect.origin.x;
-            } else if (pos.x > rect.origin.x + rect.size.width - 1) {
-                pos.x = rect.origin.x + rect.size.width - 1;
-            }
-            if (pos.y < rect.origin.y) {
-                pos.y = rect.origin.y;
-            } else if (pos.y > rect.origin.y + rect.size.height - 1) {
-                pos.y = rect.origin.y + rect.size.height - 1;
-            }
-        }
+        let delta = CGVector(dx: vx, dy: -vy)
+        let pos = MouseMovementBounds.nextPosition(
+            current: current,
+            delta: delta,
+            displays: MouseMovementBounds.activeDisplays()
+        )
         
         // post event
-        var button = CGMouseButton.left;
-        var type = CGEventType.mouseMoved;
-        if(_leftButton){
-            type = .leftMouseDragged;
-        }else if(_rightButton){
-            type = .rightMouseDragged;
-            button = .right;
-        }else if(_centerButton){
-            type = .otherMouseDragged;
-            button = .center;
+        var button = CGMouseButton.left
+        var type = CGEventType.mouseMoved
+        if(_leftButton) {
+            type = .leftMouseDragged
+        } else if(_rightButton) {
+            type = .rightMouseDragged
+            button = .right
+        } else if(_centerButton) {
+            type = .otherMouseDragged
+            button = .center
         }
         let event = CGEvent(mouseEventSource: nil, mouseType: type, mouseCursorPosition: pos, mouseButton: button)
         postEvent(event)
@@ -223,12 +210,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _timestamp = timestamp
     }
     func click(_ type:CGEventType, _ button:CGMouseButton, _ pressed:Bool){
-        let p = NSEvent.mouseLocation
-        var displayID:CGDirectDisplayID = 0
-        var displayCount:CGDisplayCount = 0
-        CGGetActiveDisplayList(1, &displayID, &displayCount)
-        let rect = CGDisplayBounds(displayID)
-        let pos = CGPoint(x: p.x, y: rect.size.height - p.y)
+        guard let locationEvent = CGEvent(source: nil) else { return }
+        let pos = locationEvent.location
         let event = CGEvent(mouseEventSource: nil, mouseType: type, mouseCursorPosition: pos, mouseButton: button)
         if(pressed){
             doublePress({self._click_state += 1}, {self._click_state = 1})
@@ -254,6 +237,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         _speedFaster = false
         _speedSlow = false
         _speedSlower = false
+        _inputHook.wheel = false
     }
     fileprivate func rawFlag(_ flag:CGEventFlags) -> UInt64 {return flag.rawValue}
     fileprivate func pressArrow(_ dx:Int, _ dy:Int, _ flags:CGEventFlags) {
@@ -389,4 +373,3 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }
     }
 }
-

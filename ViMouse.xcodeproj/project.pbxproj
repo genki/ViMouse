@@ -10,12 +10,15 @@
 		FB0A4F6C1B6899AC001CC7AB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FB0A4F6B1B6899AC001CC7AB /* Icon.png */; };
 		FB3AD3C61B60718B0058B2E0 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */; };
 		FB3AD3DB1B6216720058B2E0 /* InputHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DA1B6216720058B2E0 /* InputHook.swift */; };
+		FBAB00032B3C4D5E00600001 /* InputHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DA1B6216720058B2E0 /* InputHook.swift */; };
 		FB3AD3DF1B6590A30058B2E0 /* Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DE1B6590A30058B2E0 /* Helper.m */; };
 		FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */; };
 		FB6B6BEC1B5B57C6006E606C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */; };
 		FB6B6BEF1B5B57C6006E606C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB6B6BED1B5B57C6006E606C /* Main.storyboard */; };
 		FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BF91B5B57C6006E606C /* ViMouseTests.swift */; };
 		FB6B6C051B5B57C6006E606C /* ViMouseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6C041B5B57C6006E606C /* ViMouseUITests.swift */; };
+		FBAB00012B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00002B3C4D5E00600001 /* MouseMovementBounds.swift */; };
+		FBAB00022B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00002B3C4D5E00600001 /* MouseMovementBounds.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +46,7 @@
 		FB3AD3DE1B6590A30058B2E0 /* Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Helper.m; sourceTree = "<group>"; };
 		FB6B6BE11B5B57C6006E606C /* ViMouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViMouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FBAB00002B3C4D5E00600001 /* MouseMovementBounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseMovementBounds.swift; sourceTree = "<group>"; };
 		FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB6B6BEE1B5B57C6006E606C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FB6B6BF01B5B57C6006E606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -116,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */,
+				FBAB00002B3C4D5E00600001 /* MouseMovementBounds.swift */,
 				FB3AD3DA1B6216720058B2E0 /* InputHook.swift */,
 				FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */,
 				FB6B6BED1B5B57C6006E606C /* Main.storyboard */,
@@ -220,7 +225,7 @@
 				TargetAttributes = {
 					FB6B6BE01B5B57C6006E606C = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = S47HLAL3P5;
+					DevelopmentTeam = F986WE966M;
 						LastSwiftMigration = 1340;
 						ProvisioningStyle = Automatic;
 					};
@@ -290,6 +295,7 @@
 			files = (
 				FB3AD3DB1B6216720058B2E0 /* InputHook.swift in Sources */,
 				FB3AD3DF1B6590A30058B2E0 /* Helper.m in Sources */,
+				FBAB00012B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */,
 				FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,6 +304,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBAB00032B3C4D5E00600001 /* InputHook.swift in Sources */,
+				FBAB00022B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */,
 				FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -452,7 +460,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = S47HLAL3P5;
+				DEVELOPMENT_TEAM = F986WE966M;
 				INFOPLIST_FILE = ViMouse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;
@@ -472,7 +480,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = S47HLAL3P5;
+				DEVELOPMENT_TEAM = F986WE966M;
 				INFOPLIST_FILE = ViMouse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;
@@ -486,28 +494,24 @@
 		FB6B6C0D1B5B57C6006E606C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ViMouseTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouseTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ViMouse.app/Contents/MacOS/ViMouse";
 			};
 			name = Debug;
 		};
 		FB6B6C0E1B5B57C6006E606C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ViMouseTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouseTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ViMouse.app/Contents/MacOS/ViMouse";
 			};
 			name = Release;
 		};
