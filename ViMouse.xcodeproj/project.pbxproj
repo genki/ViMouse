@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FB0A4F6C1B6899AC001CC7AB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FB0A4F6B1B6899AC001CC7AB /* Icon.png */; };
+		FB0A4F6C1B6899AC001CC7AB /* MenuBarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FB0A4F6B1B6899AC001CC7AB /* MenuBarIcon.png */; };
 		FB3AD3C61B60718B0058B2E0 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */; };
 		FB3AD3DB1B6216720058B2E0 /* InputHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DA1B6216720058B2E0 /* InputHook.swift */; };
 		FBAB00032B3C4D5E00600001 /* InputHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DA1B6216720058B2E0 /* InputHook.swift */; };
@@ -45,7 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		FB0A4F6B1B6899AC001CC7AB /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		FB0A4F6B1B6899AC001CC7AB /* MenuBarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuBarIcon.png; sourceTree = "<group>"; };
 		FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		FB3AD3D11B62112D0058B2E0 /* ViMouse-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViMouse-Bridging-Header.h"; sourceTree = "<group>"; };
 		FB3AD3DA1B6216720058B2E0 /* InputHook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputHook.swift; sourceTree = "<group>"; };
@@ -99,7 +99,7 @@
 		FB0A4F6A1B689979001CC7AB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FB0A4F6B1B6899AC001CC7AB /* Icon.png */,
+				FB0A4F6B1B6899AC001CC7AB /* MenuBarIcon.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -282,7 +282,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB0A4F6C1B6899AC001CC7AB /* Icon.png in Resources */,
+				FB0A4F6C1B6899AC001CC7AB /* MenuBarIcon.png in Resources */,
 				FBAB000A2B3C4D5E00600001 /* Localizable.strings in Resources */,
 				FB6B6BEC1B5B57C6006E606C /* Assets.xcassets in Resources */,
 				FB6B6BEF1B5B57C6006E606C /* Main.storyboard in Resources */,

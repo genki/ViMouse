@@ -37,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     
     override init() {
         let size = NSSize(width: 16, height: 16)
-        _normalIcon = NSImage(named: NSImage.Name("Icon"))!
+        _normalIcon = NSImage(named: NSImage.Name("MenuBarIcon"))!
         _normalIcon.isTemplate = true
         _normalIcon.resizingMode = .stretch
         _normalIcon.size = size
