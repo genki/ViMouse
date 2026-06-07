@@ -22,6 +22,7 @@
 		FBAB00052B3C4D5E00600001 /* KeyMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00042B3C4D5E00600001 /* KeyMapping.swift */; };
 		FBAB00062B3C4D5E00600001 /* KeyMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00042B3C4D5E00600001 /* KeyMapping.swift */; };
 		FBAB00082B3C4D5E00600001 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */; };
+		FBAB00112B3C4D5E00600001 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */; };
 		FBAB000A2B3C4D5E00600001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FBAB00092B3C4D5E00600001 /* Localizable.strings */; };
 		FBAB000E2B3C4D5E00600001 /* MovementSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */; };
 		FBAB000F2B3C4D5E00600001 /* MovementSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */; };
@@ -330,6 +331,7 @@
 				FBAB00062B3C4D5E00600001 /* KeyMapping.swift in Sources */,
 				FBAB00022B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */,
 				FBAB000F2B3C4D5E00600001 /* MovementSettings.swift in Sources */,
+				FBAB00112B3C4D5E00600001 /* SettingsWindowController.swift in Sources */,
 				FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

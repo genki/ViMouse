@@ -89,6 +89,19 @@ class ViMouseTests: XCTestCase {
         MovementSettings.resetDefaults()
         XCTAssertEqual(MovementSettings.value(for: .baseSpeed), MovementSetting.baseSpeed.defaultValue, accuracy: 0.0001)
     }
+
+    @MainActor
+    func testSettingsWindowStopsModalWhenClosedFromWindowChrome() {
+        let controller = SettingsWindowController()
+        var didStopModal = false
+        controller.modalWillClose = {
+            didStopModal = true
+        }
+
+        controller.windowWillClose(Notification(name: NSWindow.willCloseNotification))
+
+        XCTAssertTrue(didStopModal)
+    }
 }
 
 private final class InputHookDelegateStub: InputHookDelegate {

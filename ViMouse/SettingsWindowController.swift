@@ -1,11 +1,12 @@
 import Cocoa
 
-final class SettingsWindowController: NSWindowController {
+final class SettingsWindowController: NSWindowController, NSWindowDelegate {
     private var popupByAction: [KeyMappingAction: NSPopUpButton] = [:]
     private var actionsByTag: [Int: KeyMappingAction] = [:]
     private var sliderBySetting: [MovementSetting: NSSlider] = [:]
     private var fieldBySetting: [MovementSetting: NSTextField] = [:]
     private var settingsByTag: [Int: MovementSetting] = [:]
+    var modalWillClose: (() -> Void)?
 
     init() {
         let window = NSWindow(
@@ -17,6 +18,7 @@ final class SettingsWindowController: NSWindowController {
         window.title = localized("settings.window.title")
         window.center()
         super.init(window: window)
+        window.delegate = self
         buildContent()
     }
 
@@ -346,8 +348,17 @@ final class SettingsWindowController: NSWindowController {
 
     @objc private func closeModal(_ sender: NSButton) {
         guard let window else { return }
-        NSApp.stopModal()
+        stopModal()
         window.orderOut(sender)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        stopModal()
+    }
+
+    private func stopModal() {
+        modalWillClose?()
+        NSApp.stopModal()
     }
 }
 
