@@ -75,6 +75,20 @@ class ViMouseTests: XCTestCase {
         KeyMapping.resetDefaults()
         XCTAssertEqual(KeyMapping.keyCode(for: .moveLeft), kVK_ANSI_H)
     }
+
+    func testMovementSettingsStoreClampAndResetValues() {
+        MovementSettings.resetDefaults()
+        XCTAssertEqual(MovementSettings.value(for: .baseSpeed), MovementSetting.baseSpeed.defaultValue, accuracy: 0.0001)
+
+        MovementSettings.setValue(2.5, for: .baseSpeed)
+        XCTAssertEqual(MovementSettings.value(for: .baseSpeed), 2.5, accuracy: 0.0001)
+
+        MovementSettings.setValue(-1.0, for: .baseSpeed)
+        XCTAssertEqual(MovementSettings.value(for: .baseSpeed), MovementSetting.baseSpeed.minimumValue, accuracy: 0.0001)
+
+        MovementSettings.resetDefaults()
+        XCTAssertEqual(MovementSettings.value(for: .baseSpeed), MovementSetting.baseSpeed.defaultValue, accuracy: 0.0001)
+    }
 }
 
 private final class InputHookDelegateStub: InputHookDelegate {

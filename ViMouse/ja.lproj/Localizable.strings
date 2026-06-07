@@ -2,9 +2,20 @@
 "menu.quit" = "終了";
 
 "settings.window.title" = "ViMouse 設定";
+"settings.tab.keyMapping" = "キーマッピング";
+"settings.tab.movement" = "移動";
 "settings.keyMapping.title" = "キーマッピング";
+"settings.movement.title" = "移動";
 "settings.resetDefaults.button" = "デフォルトに戻す";
+"settings.resetMovementDefaults.button" = "移動設定を戻す";
 "settings.done.button" = "完了";
+
+"movement.baseSpeed.title" = "基本速度";
+"movement.baseSpeed.detail" = "マウスモード全体のカーソル速度";
+"movement.acceleration.title" = "加速度";
+"movement.acceleration.detail" = "移動キーを押し続けたときの加速の強さ";
+"movement.damping.title" = "減衰";
+"movement.damping.detail" = "キー操作後にカーソル速度が落ちる速さ";
 
 "keyMapping.enterMouseMode.title" = "マウスモードへ切替";
 "keyMapping.exitMouseMode.title" = "マウスモードを終了";

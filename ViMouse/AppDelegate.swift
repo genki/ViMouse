@@ -19,10 +19,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _leftButton = false
     var _rightButton = false
     var _centerButton = false
-    var _baseSpeed:CGFloat = 1.33
     var _dx:CGFloat = 0.0, _dy:CGFloat = 0.0
     var _vx:CGFloat = 0.0, _vy:CGFloat = 0.0
-    let _ax:CGFloat = 2.0, _ay:CGFloat = -2.0
     var _timer:Timer? = nil
     var _timestamp:CGEventTimestamp = 0
     var _click_state:Int64 = 1
@@ -175,14 +173,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         dy /= s
         
         // accelerate
-        _vx += _ax*dx
-        _vy += _ay*dy
+        let acceleration = CGFloat(MovementSettings.acceleration)
+        _vx += acceleration*dx
+        _vy -= acceleration*dy
         
         // slowdown
-        _vx *= 0.8
-        _vy *= 0.8
+        let damping = CGFloat(MovementSettings.damping)
+        _vx *= damping
+        _vy *= damping
         
-        var vx = _vx*_baseSpeed, vy = _vy*_baseSpeed
+        let baseSpeed = CGFloat(MovementSettings.baseSpeed)
+        var vx = _vx*baseSpeed, vy = _vy*baseSpeed
         if(_speedFaster){ vx *= 4; vy *= 4 }
         if(_speedFast){ vx *= 2; vy *= 2 }
         if(_speedSlow){ vx /= 2; vy /= 2 }

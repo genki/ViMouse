@@ -2,9 +2,20 @@
 "menu.quit" = "Quit";
 
 "settings.window.title" = "ViMouse Settings";
+"settings.tab.keyMapping" = "Key Mapping";
+"settings.tab.movement" = "Movement";
 "settings.keyMapping.title" = "Key Mapping";
+"settings.movement.title" = "Movement";
 "settings.resetDefaults.button" = "Reset Defaults";
+"settings.resetMovementDefaults.button" = "Reset Movement";
 "settings.done.button" = "Done";
+
+"movement.baseSpeed.title" = "Base speed";
+"movement.baseSpeed.detail" = "Overall cursor speed in mouse mode";
+"movement.acceleration.title" = "Acceleration";
+"movement.acceleration.detail" = "How quickly held movement keys build speed";
+"movement.damping.title" = "Damping";
+"movement.damping.detail" = "How quickly cursor movement eases after key changes";
 
 "keyMapping.enterMouseMode.title" = "Enter mouse mode";
 "keyMapping.exitMouseMode.title" = "Exit mouse mode";
