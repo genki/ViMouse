@@ -56,6 +56,7 @@
 		FBAB00042B3C4D5E00600001 /* KeyMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyMapping.swift; sourceTree = "<group>"; };
 		FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
 		FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementSettings.swift; sourceTree = "<group>"; };
+		FBAB00102B3C4D5E00600001 /* ViMouse-AppStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ViMouse-AppStore.entitlements"; sourceTree = "<group>"; };
 		FBAB000B2B3C4D5E00600001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FBAB000C2B3C4D5E00600001 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -140,6 +141,7 @@
 				FBAB00092B3C4D5E00600001 /* Localizable.strings */,
 				FB6B6BED1B5B57C6006E606C /* Main.storyboard */,
 				FB6B6BF01B5B57C6006E606C /* Info.plist */,
+				FBAB00102B3C4D5E00600001 /* ViMouse-AppStore.entitlements */,
 				FB3AD3D11B62112D0058B2E0 /* ViMouse-Bridging-Header.h */,
 				FB3AD3DE1B6590A30058B2E0 /* Helper.m */,
 			);
