@@ -49,9 +49,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     }
 
     private static func activeStatusIcon(from icon: NSImage, iconSize: NSSize) -> NSImage {
-        let canvasSize = NSSize(width: 28, height: 22)
+        let canvasSize = NSSize(width: 34, height: 24)
         let image = NSImage(size: canvasSize)
-        let backgroundRect = NSRect(x: 2, y: 1, width: 24, height: 20)
+        let backgroundRect = NSRect(x: 1, y: 1, width: 32, height: 22)
         let iconRect = NSRect(
             x: (canvasSize.width - iconSize.width) / 2,
             y: (canvasSize.height - iconSize.height) / 2,
@@ -60,8 +60,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         )
 
         image.lockFocus()
-        NSColor(calibratedRed: 0.38, green: 0.31, blue: 1.0, alpha: 1.0).setFill()
-        NSBezierPath(roundedRect: backgroundRect, xRadius: 10, yRadius: 10).fill()
+        NSColor(calibratedRed: 0.0, green: 0.36, blue: 1.0, alpha: 1.0).setFill()
+        NSBezierPath(roundedRect: backgroundRect, xRadius: 7, yRadius: 7).fill()
 
         let whiteIcon = icon.copy() as? NSImage ?? icon
         whiteIcon.size = iconSize
@@ -96,7 +96,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }
         
         let statusBar = NSStatusBar.system
-        _statusItem = statusBar.statusItem(withLength: 28)
+        _statusItem = statusBar.statusItem(withLength: 34)
         _statusItem.image = _normalIcon
         
         let menu = NSMenu()
