@@ -102,6 +102,27 @@ class ViMouseTests: XCTestCase {
 
         XCTAssertTrue(didStopModal)
     }
+
+    @MainActor
+    func testMouseModeTimerFiresWhileRunLoopIsInEventTrackingMode() {
+        var didFire = false
+        let probe = TimerProbe {
+            didFire = true
+        }
+        let timer = MouseModeScheduler.scheduleTimer(
+            timeInterval: 0.01,
+            target: probe,
+            selector: #selector(TimerProbe.fire)
+        )
+        defer { timer.invalidate() }
+
+        let deadline = Date().addingTimeInterval(0.3)
+        while !didFire && Date() < deadline {
+            RunLoop.current.run(mode: .eventTracking, before: Date().addingTimeInterval(0.03))
+        }
+
+        XCTAssertTrue(didFire)
+    }
 }
 
 private final class InputHookDelegateStub: InputHookDelegate {
@@ -120,5 +141,17 @@ private final class InputHookDelegateStub: InputHookDelegate {
     func handleInput(_ keycode: Int64, _ flags: InputHook.Flags, _ pressed: Bool) -> Bool {
         calls.append(Call(keycode: keycode, pressed: pressed))
         return results.removeFirst()
+    }
+}
+
+private final class TimerProbe: NSObject {
+    private let onFire: () -> Void
+
+    init(onFire: @escaping () -> Void) {
+        self.onFire = onFire
+    }
+
+    @objc func fire() {
+        onFire()
     }
 }

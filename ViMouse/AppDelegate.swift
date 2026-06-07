@@ -337,8 +337,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     fileprivate func enableMouseMode(){
         NSLog("mouse mode enabled")
         let op = BlockOperation(){self.tick()}
-        _timer = Timer.scheduledTimer(timeInterval: 0.015, target: op,
-            selector: #selector(Operation.main), userInfo: nil, repeats: true)
+        _timer = MouseModeScheduler.scheduleTimer(
+            timeInterval: 0.015,
+            target: op,
+            selector: #selector(Operation.main)
+        )
         _statusItem.image = _activeIcon
         _wokenupAt = GetCurrentEventTime()
         reset()

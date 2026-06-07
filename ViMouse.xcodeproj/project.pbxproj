@@ -23,6 +23,8 @@
 		FBAB00062B3C4D5E00600001 /* KeyMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00042B3C4D5E00600001 /* KeyMapping.swift */; };
 		FBAB00082B3C4D5E00600001 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */; };
 		FBAB00112B3C4D5E00600001 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */; };
+		FBAB00122B3C4D5E00600001 /* MouseModeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00102B3C4D5E00600002 /* MouseModeScheduler.swift */; };
+		FBAB00132B3C4D5E00600001 /* MouseModeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00102B3C4D5E00600002 /* MouseModeScheduler.swift */; };
 		FBAB000A2B3C4D5E00600001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FBAB00092B3C4D5E00600001 /* Localizable.strings */; };
 		FBAB000E2B3C4D5E00600001 /* MovementSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */; };
 		FBAB000F2B3C4D5E00600001 /* MovementSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */; };
@@ -58,6 +60,7 @@
 		FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
 		FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementSettings.swift; sourceTree = "<group>"; };
 		FBAB00102B3C4D5E00600001 /* ViMouse-AppStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ViMouse-AppStore.entitlements"; sourceTree = "<group>"; };
+		FBAB00102B3C4D5E00600002 /* MouseModeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseModeScheduler.swift; sourceTree = "<group>"; };
 		FBAB000B2B3C4D5E00600001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FBAB000C2B3C4D5E00600001 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -135,6 +138,7 @@
 				FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */,
 				FBAB00042B3C4D5E00600001 /* KeyMapping.swift */,
 				FBAB00002B3C4D5E00600001 /* MouseMovementBounds.swift */,
+				FBAB00102B3C4D5E00600002 /* MouseModeScheduler.swift */,
 				FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */,
 				FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */,
 				FB3AD3DA1B6216720058B2E0 /* InputHook.swift */,
@@ -317,6 +321,7 @@
 				FB3AD3DF1B6590A30058B2E0 /* Helper.m in Sources */,
 				FBAB00052B3C4D5E00600001 /* KeyMapping.swift in Sources */,
 				FBAB00012B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */,
+				FBAB00122B3C4D5E00600001 /* MouseModeScheduler.swift in Sources */,
 				FBAB000E2B3C4D5E00600001 /* MovementSettings.swift in Sources */,
 				FBAB00082B3C4D5E00600001 /* SettingsWindowController.swift in Sources */,
 				FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */,
@@ -330,6 +335,7 @@
 				FBAB00032B3C4D5E00600001 /* InputHook.swift in Sources */,
 				FBAB00062B3C4D5E00600001 /* KeyMapping.swift in Sources */,
 				FBAB00022B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */,
+				FBAB00132B3C4D5E00600001 /* MouseModeScheduler.swift in Sources */,
 				FBAB000F2B3C4D5E00600001 /* MovementSettings.swift in Sources */,
 				FBAB00112B3C4D5E00600001 /* SettingsWindowController.swift in Sources */,
 				FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */,

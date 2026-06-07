@@ -98,7 +98,11 @@ class InputHook {
         _port = CGEvent.tapCreate(tap: .cghidEventTap, place: .headInsertEventTap, options: .defaultTap,
             eventsOfInterest: mask, callback: _callback, userInfo: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()))!
         let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, _port, 0)
-        CFRunLoopAddSource(CFRunLoopGetCurrent(), source, CFRunLoopMode.defaultMode)
+        let runLoop = CFRunLoopGetCurrent()
+        CFRunLoopAddSource(runLoop, source, CFRunLoopMode.defaultMode)
+        CFRunLoopAddSource(runLoop, source, CFRunLoopMode.commonModes)
+        CFRunLoopAddSource(runLoop, source, CFRunLoopMode(RunLoop.Mode.eventTracking.rawValue as CFString))
+        CFRunLoopAddSource(runLoop, source, CFRunLoopMode(RunLoop.Mode.modalPanel.rawValue as CFString))
     }
     func enable(){
         if(_port == nil){
