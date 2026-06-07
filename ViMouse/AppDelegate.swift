@@ -38,21 +38,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
     var _settingsWindowController: SettingsWindowController?
     
     override init() {
-        let size = NSSize(width: 16,height: 16)
+        let size = NSSize(width: 16, height: 16)
         _normalIcon = NSImage(named: NSImage.Name("Icon"))!
         _normalIcon.isTemplate = true
         _normalIcon.resizingMode = .stretch
         _normalIcon.size = size
         
-        // active icon
-        let tintColor = NSColor(red: 0.1, green: 0.5, blue: 1.0, alpha: 1.0)
-        _activeIcon = (_normalIcon.copy() as? NSImage)!
-        _activeIcon.lockFocus()
-        tintColor.set()
-        let rect = NSRect(origin:CGPoint.zero, size:size)
-        rect.fill(using:NSCompositingOperation.sourceAtop)
-        _activeIcon.unlockFocus()
+        _activeIcon = AppDelegate.activeStatusIcon(from: _normalIcon, iconSize: size)
         _activeIcon.isTemplate = false
+    }
+
+    private static func activeStatusIcon(from icon: NSImage, iconSize: NSSize) -> NSImage {
+        let canvasSize = NSSize(width: 28, height: 22)
+        let image = NSImage(size: canvasSize)
+        let backgroundRect = NSRect(x: 2, y: 1, width: 24, height: 20)
+        let iconRect = NSRect(
+            x: (canvasSize.width - iconSize.width) / 2,
+            y: (canvasSize.height - iconSize.height) / 2,
+            width: iconSize.width,
+            height: iconSize.height
+        )
+
+        image.lockFocus()
+        NSColor(calibratedRed: 0.38, green: 0.31, blue: 1.0, alpha: 1.0).setFill()
+        NSBezierPath(roundedRect: backgroundRect, xRadius: 10, yRadius: 10).fill()
+
+        let whiteIcon = icon.copy() as? NSImage ?? icon
+        whiteIcon.size = iconSize
+        whiteIcon.lockFocus()
+        NSColor.white.set()
+        NSRect(origin: .zero, size: iconSize).fill(using: .sourceAtop)
+        whiteIcon.unlockFocus()
+        whiteIcon.draw(in: iconRect, from: NSRect(origin: .zero, size: iconSize), operation: .sourceOver, fraction: 1.0)
+        image.unlockFocus()
+        return image
     }
 
     override func awakeFromNib() {
@@ -77,7 +96,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, InputHookDelegate {
         }
         
         let statusBar = NSStatusBar.system
-        _statusItem = statusBar.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
+        _statusItem = statusBar.statusItem(withLength: 28)
         _statusItem.image = _normalIcon
         
         let menu = NSMenu()
