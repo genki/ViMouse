@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+
+APP="/Applications/ViMouse.app"
+LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister"
+
+if [ -d "$APP" ]; then
+  "$LSREGISTER" -f -R -trusted "$APP" 2>/dev/null || true
+
+  # Installer scripts run as root. Start the app in the logged-in user's GUI
+  # session so AutoLaunchManager registers the login item for that user rather
+  # than for root.
+  CONSOLE_USER="$(/usr/bin/stat -f '%Su' /dev/console 2>/dev/null || true)"
+  if [ -n "$CONSOLE_USER" ] && [ "$CONSOLE_USER" != "root" ]; then
+    CONSOLE_UID="$(/usr/bin/id -u "$CONSOLE_USER" 2>/dev/null || true)"
+    if [ -n "$CONSOLE_UID" ]; then
+      /bin/launchctl asuser "$CONSOLE_UID" /usr/bin/sudo -u "$CONSOLE_USER" -H /usr/bin/open -b com.s21g.ViMouse 2>/dev/null \
+        || /usr/bin/sudo -u "$CONSOLE_USER" -H /usr/bin/open "$APP" 2>/dev/null \
+        || true
+    fi
+  fi
+fi
+
+exit 0

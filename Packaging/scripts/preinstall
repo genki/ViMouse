@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+/usr/bin/pkill -x ViMouse 2>/dev/null || true
+/bin/sleep 1
+/usr/bin/pkill -9 -x ViMouse 2>/dev/null || true
+
+exit 0

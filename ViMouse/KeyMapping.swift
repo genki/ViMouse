@@ -2,6 +2,7 @@ import Carbon
 import Foundation
 
 enum KeyMappingAction: String, CaseIterable {
+    case selfConversionToggle
     case enterMouseMode
     case exitMouseMode
     case moveLeft
@@ -12,6 +13,7 @@ enum KeyMappingAction: String, CaseIterable {
     case leftClick
     case rightClick
     case middleClick
+    case cursorRipple
     case verySlow
     case slow
     case fast
@@ -25,6 +27,7 @@ enum KeyMappingAction: String, CaseIterable {
 
     var title: String {
         switch self {
+        case .selfConversionToggle: return localized("keyMapping.selfConversionToggle.title")
         case .enterMouseMode: return localized("keyMapping.enterMouseMode.title")
         case .exitMouseMode: return localized("keyMapping.exitMouseMode.title")
         case .moveLeft: return localized("keyMapping.moveLeft.title")
@@ -35,6 +38,7 @@ enum KeyMappingAction: String, CaseIterable {
         case .leftClick: return localized("keyMapping.leftClick.title")
         case .rightClick: return localized("keyMapping.rightClick.title")
         case .middleClick: return localized("keyMapping.middleClick.title")
+        case .cursorRipple: return localized("keyMapping.cursorRipple.title")
         case .verySlow: return localized("keyMapping.verySlow.title")
         case .slow: return localized("keyMapping.slow.title")
         case .fast: return localized("keyMapping.fast.title")
@@ -50,11 +54,13 @@ enum KeyMappingAction: String, CaseIterable {
 
     var detail: String {
         switch self {
+        case .selfConversionToggle: return localized("keyMapping.selfConversionToggle.detail")
         case .enterMouseMode: return localized("keyMapping.enterMouseMode.detail")
         case .exitMouseMode: return localized("keyMapping.mouseMode.detail")
         case .moveLeft, .moveDown, .moveUp, .moveRight: return localized("keyMapping.movement.detail")
         case .wheel: return localized("keyMapping.mouseMode.detail")
         case .leftClick, .rightClick, .middleClick: return localized("keyMapping.mouseMode.detail")
+        case .cursorRipple: return localized("keyMapping.mouseMode.detail")
         case .verySlow, .slow, .fast, .veryFast: return localized("keyMapping.speed.detail")
         case .yank, .paste, .cut, .reload, .undo, .find: return localized("keyMapping.command.detail")
         }
@@ -62,6 +68,7 @@ enum KeyMappingAction: String, CaseIterable {
 
     var defaultKeyCode: Int {
         switch self {
+        case .selfConversionToggle: return kVK_JIS_Kana
         case .enterMouseMode: return kVK_ANSI_Semicolon
         case .exitMouseMode: return kVK_ANSI_I
         case .moveLeft: return kVK_ANSI_H
@@ -72,6 +79,7 @@ enum KeyMappingAction: String, CaseIterable {
         case .leftClick: return kVK_Space
         case .rightClick: return kVK_ANSI_Semicolon
         case .middleClick: return kVK_ANSI_N
+        case .cursorRipple: return kVK_ANSI_M
         case .verySlow: return kVK_ANSI_A
         case .slow: return kVK_ANSI_S
         case .fast: return kVK_ANSI_D
@@ -89,6 +97,23 @@ enum KeyMappingAction: String, CaseIterable {
 struct KeyChoice {
     let title: String
     let keyCode: Int
+}
+
+enum WindowNavigationAction: Equatable {
+    case previousSpace
+    case nextSpace
+    case frontApplicationWindows
+    case allWindows
+
+    static func action(for keyCode: Int) -> WindowNavigationAction? {
+        switch keyCode {
+        case kVK_ANSI_H: return .previousSpace
+        case kVK_ANSI_L: return .nextSpace
+        case kVK_ANSI_J: return .frontApplicationWindows
+        case kVK_ANSI_K: return .allWindows
+        default: return nil
+        }
+    }
 }
 
 enum KeyMapping {
@@ -123,6 +148,8 @@ enum KeyMapping {
         KeyChoice(title: ";", keyCode: kVK_ANSI_Semicolon),
         KeyChoice(title: "/", keyCode: kVK_ANSI_Slash),
         KeyChoice(title: localized("keyChoice.space"), keyCode: kVK_Space),
+        KeyChoice(title: localized("keyChoice.kana"), keyCode: kVK_JIS_Kana),
+        KeyChoice(title: localized("keyChoice.eisu"), keyCode: kVK_JIS_Eisu),
     ]
 
     static func keyCode(for action: KeyMappingAction) -> Int {

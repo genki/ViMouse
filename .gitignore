@@ -5,3 +5,5 @@ build/
 build-appstore-*/
 build*.log
 dist/
+
+LocalEngine/sdk.tar.gz

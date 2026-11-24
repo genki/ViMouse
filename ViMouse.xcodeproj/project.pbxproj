@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB0600010000000000000001 /* RemoteAgentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0600010000000000000003; };
+		AB0600010000000000000002 /* RemoteAgentAPI.swift in Test Sources */ = {isa = PBXBuildFile; fileRef = AB0600010000000000000003; };
 		FB0A4F6C1B6899AC001CC7AB /* MenuBarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FB0A4F6B1B6899AC001CC7AB /* MenuBarIcon.png */; };
 		FB3AD3C61B60718B0058B2E0 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */; };
 		FB3AD3DB1B6216720058B2E0 /* InputHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DA1B6216720058B2E0 /* InputHook.swift */; };
 		FBAB00032B3C4D5E00600001 /* InputHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DA1B6216720058B2E0 /* InputHook.swift */; };
 		FB3AD3DF1B6590A30058B2E0 /* Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3AD3DE1B6590A30058B2E0 /* Helper.m */; };
+		FBAB00622B3C4D5E00600001 /* VoiceInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00602B3C4D5E00600001 /* VoiceInput.swift */; };
+		FBAB00612B3C4D5E00600001 /* VoiceInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00602B3C4D5E00600001 /* VoiceInput.swift */; };
 		FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */; };
 		FB6B6BEC1B5B57C6006E606C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */; };
 		FB6B6BEF1B5B57C6006E606C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB6B6BED1B5B57C6006E606C /* Main.storyboard */; };
@@ -28,6 +32,23 @@
 		FBAB000A2B3C4D5E00600001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FBAB00092B3C4D5E00600001 /* Localizable.strings */; };
 		FBAB000E2B3C4D5E00600001 /* MovementSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */; };
 		FBAB000F2B3C4D5E00600001 /* MovementSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */; };
+		FBAC10012B3C4D5E00610001 /* SelfConversionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC10002B3C4D5E00610001 /* SelfConversionSettings.swift */; };
+		FBAC10022B3C4D5E00610001 /* SelfConversionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC10002B3C4D5E00610001 /* SelfConversionSettings.swift */; };
+		FBAC10042B3C4D5E00610001 /* JapaneseConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC10032B3C4D5E00610001 /* JapaneseConversion.swift */; };
+		FBAC10052B3C4D5E00610001 /* JapaneseConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC10032B3C4D5E00610001 /* JapaneseConversion.swift */; };
+		FBAC10072B3C4D5E00610001 /* SelfConversionWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC10062B3C4D5E00610001 /* SelfConversionWindowController.swift */; };
+		FBAC10082B3C4D5E00610001 /* SelfConversionWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC10062B3C4D5E00610001 /* SelfConversionWindowController.swift */; };
+		FBAB00212B3C4D5E00600001 /* CursorRippleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00202B3C4D5E00600001 /* CursorRippleController.swift */; };
+		FBAB00222B3C4D5E00600001 /* CursorRippleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00202B3C4D5E00600001 /* CursorRippleController.swift */; };
+		FBAB00242B3C4D5E00600001 /* CursorShakeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00232B3C4D5E00600001 /* CursorShakeDetector.swift */; };
+		FBAB00252B3C4D5E00600001 /* CursorShakeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00232B3C4D5E00600001 /* CursorShakeDetector.swift */; };
+		AB2011190000000000000004 /* TrackpadEdgeSwipeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2011190000000000000001 /* TrackpadEdgeSwipeDetector.swift */; };
+		AB2011190000000000000005 /* TrackpadEdgeSwipeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2011190000000000000001 /* TrackpadEdgeSwipeDetector.swift */; };
+		AB2011190000000000000006 /* TrackpadMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2011190000000000000003 /* TrackpadMonitor.m */; };
+		FBAB00312B3C4D5E00600001 /* AutoLaunch.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00302B3C4D5E00600001 /* AutoLaunch.swift */; };
+		FBAB00322B3C4D5E00600001 /* AutoLaunch.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAB00302B3C4D5E00600001 /* AutoLaunch.swift */; };
+		FBAB00352B3C4D5E00600001 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBAB00342B3C4D5E00600001 /* ServiceManagement.framework */; };
+		FBAB00362B3C4D5E00600001 /* ServiceManagement.framework in Test Frameworks */ = {isa = PBXBuildFile; fileRef = FBAB00342B3C4D5E00600001 /* ServiceManagement.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,12 +69,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB0600010000000000000003 /* RemoteAgentAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAgentAPI.swift; sourceTree = "<group>"; };
 		FB0A4F6B1B6899AC001CC7AB /* MenuBarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuBarIcon.png; sourceTree = "<group>"; };
 		FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		FB3AD3D11B62112D0058B2E0 /* ViMouse-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViMouse-Bridging-Header.h"; sourceTree = "<group>"; };
 		FB3AD3DA1B6216720058B2E0 /* InputHook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputHook.swift; sourceTree = "<group>"; };
 		FB3AD3DE1B6590A30058B2E0 /* Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Helper.m; sourceTree = "<group>"; };
 		FB6B6BE11B5B57C6006E606C /* ViMouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViMouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBAB00602B3C4D5E00600001 /* VoiceInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInput.swift; sourceTree = "<group>"; };
 		FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FBAB00002B3C4D5E00600001 /* MouseMovementBounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseMovementBounds.swift; sourceTree = "<group>"; };
 		FBAB00042B3C4D5E00600001 /* KeyMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyMapping.swift; sourceTree = "<group>"; };
@@ -61,6 +84,16 @@
 		FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementSettings.swift; sourceTree = "<group>"; };
 		FBAB00102B3C4D5E00600001 /* ViMouse-AppStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ViMouse-AppStore.entitlements"; sourceTree = "<group>"; };
 		FBAB00102B3C4D5E00600002 /* MouseModeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseModeScheduler.swift; sourceTree = "<group>"; };
+		FBAC10002B3C4D5E00610001 /* SelfConversionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfConversionSettings.swift; sourceTree = "<group>"; };
+		FBAC10032B3C4D5E00610001 /* JapaneseConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JapaneseConversion.swift; sourceTree = "<group>"; };
+		FBAC10062B3C4D5E00610001 /* SelfConversionWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfConversionWindowController.swift; sourceTree = "<group>"; };
+		FBAB00202B3C4D5E00600001 /* CursorRippleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorRippleController.swift; sourceTree = "<group>"; };
+		FBAB00232B3C4D5E00600001 /* CursorShakeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorShakeDetector.swift; sourceTree = "<group>"; };
+		AB2011190000000000000001 /* TrackpadEdgeSwipeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackpadEdgeSwipeDetector.swift; sourceTree = "<group>"; };
+		AB2011190000000000000002 /* TrackpadMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrackpadMonitor.h; sourceTree = "<group>"; };
+		AB2011190000000000000003 /* TrackpadMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrackpadMonitor.m; sourceTree = "<group>"; };
+		FBAB00302B3C4D5E00600001 /* AutoLaunch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLaunch.swift; sourceTree = "<group>"; };
+		FBAB00342B3C4D5E00600001 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		FBAB000B2B3C4D5E00600001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FBAB000C2B3C4D5E00600001 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +114,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB3AD3C61B60718B0058B2E0 /* ApplicationServices.framework in Frameworks */,
+				FBAB00352B3C4D5E00600001 /* ServiceManagement.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBAB00362B3C4D5E00600001 /* ServiceManagement.framework in Test Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				FB3AD3C51B60718B0058B2E0 /* ApplicationServices.framework */,
+				FBAB00342B3C4D5E00600001 /* ServiceManagement.framework */,
 				FB6B6BE31B5B57C6006E606C /* ViMouse */,
 				FB0A4F6A1B689979001CC7AB /* Resources */,
 				FB6B6BF81B5B57C6006E606C /* ViMouseTests */,
@@ -136,11 +172,22 @@
 			isa = PBXGroup;
 			children = (
 				FB6B6BE41B5B57C6006E606C /* AppDelegate.swift */,
+				FBAB00602B3C4D5E00600001 /* VoiceInput.swift */,
+				FBAB00202B3C4D5E00600001 /* CursorRippleController.swift */,
+				FBAB00232B3C4D5E00600001 /* CursorShakeDetector.swift */,
+				AB2011190000000000000001 /* TrackpadEdgeSwipeDetector.swift */,
+				AB2011190000000000000002 /* TrackpadMonitor.h */,
+				AB2011190000000000000003 /* TrackpadMonitor.m */,
+				FBAB00302B3C4D5E00600001 /* AutoLaunch.swift */,
+				AB0600010000000000000003 /* RemoteAgentAPI.swift */,
 				FBAB00042B3C4D5E00600001 /* KeyMapping.swift */,
 				FBAB00002B3C4D5E00600001 /* MouseMovementBounds.swift */,
 				FBAB00102B3C4D5E00600002 /* MouseModeScheduler.swift */,
 				FBAB000D2B3C4D5E00600001 /* MovementSettings.swift */,
 				FBAB00072B3C4D5E00600001 /* SettingsWindowController.swift */,
+				FBAC10002B3C4D5E00610001 /* SelfConversionSettings.swift */,
+				FBAC10032B3C4D5E00610001 /* JapaneseConversion.swift */,
+				FBAC10062B3C4D5E00610001 /* SelfConversionWindowController.swift */,
 				FB3AD3DA1B6216720058B2E0 /* InputHook.swift */,
 				FB6B6BEB1B5B57C6006E606C /* Assets.xcassets */,
 				FBAB00092B3C4D5E00600001 /* Localizable.strings */,
@@ -189,6 +236,7 @@
 				FB6B6BDD1B5B57C6006E606C /* Sources */,
 				FB6B6BDE1B5B57C6006E606C /* Frameworks */,
 				FB6B6BDF1B5B57C6006E606C /* Resources */,
+				A61005000000000000000041 /* Embed local conversion engine */,
 			);
 			buildRules = (
 			);
@@ -312,6 +360,19 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+        A61005000000000000000041 /* Embed local conversion engine */ = {
+            isa = PBXShellScriptBuildPhase;
+            buildActionMask = 2147483647;
+            files = ();
+            inputPaths = ();
+            outputPaths = ();
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/bash;
+            shellScript = "\"${PROJECT_DIR}/scripts/embed-local-engine.sh\"";
+        };
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		FB6B6BDD1B5B57C6006E606C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -324,7 +385,17 @@
 				FBAB00122B3C4D5E00600001 /* MouseModeScheduler.swift in Sources */,
 				FBAB000E2B3C4D5E00600001 /* MovementSettings.swift in Sources */,
 				FBAB00082B3C4D5E00600001 /* SettingsWindowController.swift in Sources */,
+				FBAC10012B3C4D5E00610001 /* SelfConversionSettings.swift in Sources */,
+				FBAC10042B3C4D5E00610001 /* JapaneseConversion.swift in Sources */,
+				FBAC10072B3C4D5E00610001 /* SelfConversionWindowController.swift in Sources */,
 				FB6B6BE51B5B57C6006E606C /* AppDelegate.swift in Sources */,
+				FBAB00612B3C4D5E00600001 /* VoiceInput.swift in Sources */,
+				FBAB00212B3C4D5E00600001 /* CursorRippleController.swift in Sources */,
+				FBAB00242B3C4D5E00600001 /* CursorShakeDetector.swift in Sources */,
+				AB2011190000000000000004 /* TrackpadEdgeSwipeDetector.swift in Sources */,
+				AB2011190000000000000006 /* TrackpadMonitor.m in Sources */,
+				FBAB00312B3C4D5E00600001 /* AutoLaunch.swift in Sources */,
+				AB0600010000000000000001 /* RemoteAgentAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,9 +408,18 @@
 				FBAB00022B3C4D5E00600001 /* MouseMovementBounds.swift in Sources */,
 				FBAB00132B3C4D5E00600001 /* MouseModeScheduler.swift in Sources */,
 				FBAB000F2B3C4D5E00600001 /* MovementSettings.swift in Sources */,
-				FBAB00112B3C4D5E00600001 /* SettingsWindowController.swift in Sources */,
-				FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */,
-			);
+					FBAB00112B3C4D5E00600001 /* SettingsWindowController.swift in Sources */,
+					FBAC10022B3C4D5E00610001 /* SelfConversionSettings.swift in Sources */,
+					FBAC10052B3C4D5E00610001 /* JapaneseConversion.swift in Sources */,
+					FBAC10082B3C4D5E00610001 /* SelfConversionWindowController.swift in Sources */,
+					FBAB00622B3C4D5E00600001 /* VoiceInput.swift in Sources */,
+					FB6B6BFA1B5B57C6006E606C /* ViMouseTests.swift in Sources */,
+					FBAB00222B3C4D5E00600001 /* CursorRippleController.swift in Sources */,
+					FBAB00252B3C4D5E00600001 /* CursorShakeDetector.swift in Sources */,
+				AB2011190000000000000005 /* TrackpadEdgeSwipeDetector.swift in Sources */,
+					FBAB00322B3C4D5E00600001 /* AutoLaunch.swift in Sources */,
+					AB0600010000000000000002 /* RemoteAgentAPI.swift in Test Sources */,
+				);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FB6B6BFC1B5B57C6006E606C /* Sources */ = {
@@ -502,6 +582,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = F986WE966M;
+				CODE_SIGN_ENTITLEMENTS = ViMouse/ViMouse.entitlements;
 				INFOPLIST_FILE = ViMouse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;
@@ -522,6 +603,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = F986WE966M;
+				CODE_SIGN_ENTITLEMENTS = ViMouse/ViMouse.entitlements;
 				INFOPLIST_FILE = ViMouse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s21g.ViMouse;

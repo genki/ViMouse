@@ -1,14 +1,39 @@
+"menu.selfConversion" = "Self Conversion";
 "menu.settings" = "Settings...";
 "menu.quit" = "Quit";
 
 "settings.window.title" = "ViMouse Settings";
 "settings.tab.keyMapping" = "Key Mapping";
 "settings.tab.movement" = "Movement";
+"settings.tab.conversion" = "Conversion";
 "settings.keyMapping.title" = "Key Mapping";
 "settings.movement.title" = "Movement";
+"settings.conversion.title" = "Self Conversion";
 "settings.resetDefaults.button" = "Reset Defaults";
 "settings.resetMovementDefaults.button" = "Reset Movement";
 "settings.done.button" = "Done";
+"settings.selfConversion.enabled" = "Use self conversion with the あいう key";
+"settings.selfConversion.detail" = "When enabled, ViMouse opens its own conversion window without changing the foreground app's input source. When disabled, the existing あいう behavior is unchanged.";
+"settings.selfConversion.apiEndpoint" = "vmc endpoint";
+"settings.selfConversion.apiEndpoint.placeholder" = "http://127.0.0.1:8767/convert";
+"settings.selfConversion.apiEndpoint.detail" = "The /convert URL is used only in Server mode. Local mode does not send conversion requests.";
+"settings.selfConversion.apiSpec.button" = "Open conversion server spec";
+"settings.selfConversion.requestTimeout" = "Timeout";
+"settings.selfConversion.requestTimeout.unit" = "sec";
+"settings.selfConversion.requestTimeout.detail" = "ViMouse falls back to local candidates when the server is slow. Use 10.0 seconds for the WinVR converter.";
+"settings.selfConversion.test.title" = "Conversion Test";
+"settings.selfConversion.test.placeholder" = "Example: kyouhatennkigaiidesu";
+"settings.selfConversion.test.button" = "Convert";
+"settings.selfConversion.test.ready" = "Convert a test input to inspect candidates from the selected conversion engine.";
+"settings.selfConversion.test.running" = "Converting...";
+"settings.selfConversion.test.done" = "Conversion results";
+"settings.selfConversion.test.empty" = "No candidates.";
+"settings.selfConversion.test.endpointRequired" = "Set the conversion API endpoint first.";
+"settings.selfConversion.test.inputRequired" = "Enter romaji to test.";
+"settings.selfConversion.keys" = "Enter: commit / Tab: partial commit / Ctrl+G: split input after first character / Ctrl+J, Ctrl+K: select / Ctrl+configured key: toggle self conversion / ABC: input mode / Ctrl+;: mouse mode";
+
+"conversion.placeholder" = "Type romaji...";
+"conversion.loading" = "Converting...";
 
 "movement.baseSpeed.title" = "Base speed";
 "movement.baseSpeed.detail" = "Overall cursor speed in mouse mode";
@@ -17,6 +42,7 @@
 "movement.damping.title" = "Damping";
 "movement.damping.detail" = "How quickly cursor movement eases after key changes";
 
+"keyMapping.selfConversionToggle.title" = "Toggle self conversion";
 "keyMapping.enterMouseMode.title" = "Enter mouse mode";
 "keyMapping.exitMouseMode.title" = "Exit mouse mode";
 "keyMapping.moveLeft.title" = "Move left";
@@ -27,6 +53,7 @@
 "keyMapping.leftClick.title" = "Left click";
 "keyMapping.rightClick.title" = "Right click";
 "keyMapping.middleClick.title" = "Middle click";
+"keyMapping.cursorRipple.title" = "Locate cursor";
 "keyMapping.verySlow.title" = "Very slow";
 "keyMapping.slow.title" = "Slow";
 "keyMapping.fast.title" = "Fast";
@@ -38,6 +65,7 @@
 "keyMapping.undo.title" = "Undo";
 "keyMapping.find.title" = "Find";
 
+"keyMapping.selfConversionToggle.detail" = "Input mode: Ctrl+configured key";
 "keyMapping.enterMouseMode.detail" = "Input mode: Ctrl+key or Fn+key";
 "keyMapping.mouseMode.detail" = "Mouse mode";
 "keyMapping.movement.detail" = "Mouse mode movement; Ctrl+Shift in Input mode sends arrows";
@@ -45,3 +73,43 @@
 "keyMapping.command.detail" = "Mouse mode command";
 
 "keyChoice.space" = "Space";
+"keyChoice.kana" = "あいう";
+"keyChoice.eisu" = "ABC";
+
+"agent.menu" = "Allow remote operation (LAN)";
+"input.status.disabled" = "Keyboard control: stopped";
+"input.status.running" = "Keyboard control: ready";
+"input.status.accessibilityRequired" = "Keyboard control: Accessibility permission required";
+"input.status.monitoringRequired" = "Keyboard control: Input Monitoring permission required";
+"input.status.unavailable" = "Keyboard control: reconnecting";
+"input.status.secureInput" = "Keyboard control: waiting for secure input to end";
+"input.reconnect" = "Reconnect keyboard control";
+"input.openAccessibility" = "Open Accessibility settings…";
+"input.openMonitoring" = "Open Input Monitoring settings…";
+"agent.tab" = "Agent API";
+"agent.enabled" = "Remote operation enabled · Port 8766";
+"agent.disabled" = "Remote operation disabled";
+"agent.help" = "Enable to display an authenticated API documentation URL. Select the LAN address and share the URL with your agent. Only the same private IPv4 subnet (or this Mac) can connect. HTTP is unencrypted; use a trusted LAN. Renewing the token immediately invalidates the old URL. Mouse buttons held by the API are released after 5 seconds without an action, when disabled, or when the token changes.";
+"agent.copy" = "Copy URL";
+"agent.rotate" = "Renew token";
+"agent.keychain.prompt" = "ViMouse needs permission to access its LAN Agent API token in the login keychain.";
+"settings.selfConversion.learning" = "Learn confirmed readings and words locally (90 days, up to 512 entries)";
+"settings.selfConversion.learning.undo" = "Undo last learning";
+"settings.selfConversion.learning.clear" = "Delete learning history";
+
+"settings.selfConversion.backend.local" = "Local conversion (instant updates)";
+"settings.selfConversion.backend.server" = "Server conversion";
+"settings.selfConversion.backend.detail" = "Local conversion requires Apple Silicon and macOS 14+, and updates candidates on every edit. Server conversion waits for 2 seconds of idle input.";
+
+"settings.selfConversion.historyLimit" = "Conversion input history size";
+
+"settings.selfConversion.historyDetail" = "Press Ctrl+K in an empty conversion window to recall input; press again to go back. Default: 10. Set 0 to disable and clear history. History is stored on this device.";
+
+"voiceInput.preparing" = "Preparing voice input";
+"voiceInput.recording" = "Recording. Press again to dictate, or Esc to cancel.";
+"voiceInput.recognizing" = "Recognizing Japanese speech";
+"voiceInput.microphone" = "Microphone unavailable. Check ViMouse's microphone access in System Settings.";
+"voiceInput.targetChanged" = "Return to the original input field and try again.";
+"voiceInput.model" = "This Mac could not prepare the Japanese dictation model.";
+"voiceInput.noSpeech" = "No speech was recognized.";
+"voiceInput.failed" = "Could not complete voice input.";

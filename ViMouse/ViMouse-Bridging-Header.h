@@ -3,6 +3,9 @@
 //
 
 #import <Carbon/Carbon.h>
+#import "TrackpadMonitor.h"
 
 CGEventRef VMCreateMouseWheelEvent(NSInteger wv, NSInteger wh);
-int spaces_movetospace(NSInteger dx);
+CGDirectDisplayID vm_pointer_display(void);
+void vm_swipe_to_adjacent_space(NSInteger offset, CGDirectDisplayID display);
+int vm_mission_control_action(NSInteger mode);

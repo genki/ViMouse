@@ -1,14 +1,39 @@
+"menu.selfConversion" = "自前変換";
 "menu.settings" = "設定...";
 "menu.quit" = "終了";
 
 "settings.window.title" = "ViMouse 設定";
 "settings.tab.keyMapping" = "キーマッピング";
 "settings.tab.movement" = "移動";
+"settings.tab.conversion" = "変換";
 "settings.keyMapping.title" = "キーマッピング";
 "settings.movement.title" = "移動";
+"settings.conversion.title" = "自前変換";
 "settings.resetDefaults.button" = "デフォルトに戻す";
 "settings.resetMovementDefaults.button" = "移動設定を戻す";
 "settings.done.button" = "完了";
+"settings.selfConversion.enabled" = "あいうキーで自前変換を使う";
+"settings.selfConversion.detail" = "有効時は前面アプリの入力ソースを変更せず、ViMouse の変換ウィンドウを開きます。無効時は既存のあいうキー動作を維持します。";
+"settings.selfConversion.apiEndpoint" = "vmc エンドポイント";
+"settings.selfConversion.apiEndpoint.placeholder" = "http://127.0.0.1:8767/convert";
+"settings.selfConversion.apiEndpoint.detail" = "サーバー方式を選んだ場合に使用する /convert のURLです。ローカル方式では通信しません。";
+"settings.selfConversion.apiSpec.button" = "変換サーバー仕様を開く";
+"settings.selfConversion.requestTimeout" = "タイムアウト";
+"settings.selfConversion.requestTimeout.unit" = "秒";
+"settings.selfConversion.requestTimeout.detail" = "応答が遅い場合はフォールバック候補へ切り替えます。WinVR 変換器では通常 10.0 秒です。";
+"settings.selfConversion.test.title" = "変換テスト";
+"settings.selfConversion.test.placeholder" = "例: kyouhatennkigaiidesu";
+"settings.selfConversion.test.button" = "変換";
+"settings.selfConversion.test.ready" = "テスト入力を変換して、選択した変換方式の候補を確認できます。";
+"settings.selfConversion.test.running" = "変換中...";
+"settings.selfConversion.test.done" = "変換結果";
+"settings.selfConversion.test.empty" = "候補はありません。";
+"settings.selfConversion.test.endpointRequired" = "先に変換 API エンドポイントを設定してください。";
+"settings.selfConversion.test.inputRequired" = "テストするローマ字を入力してください。";
+"settings.selfConversion.keys" = "Enter: 確定 / Tab: 部分確定 / Ctrl+G: 入力の先頭1文字で分割 / Ctrl+J, Ctrl+K: 候補選択 / Ctrl+設定キー: 自前変換のオン/オフ / ABC: 入力モード / Ctrl+;: マウスモード";
+
+"conversion.placeholder" = "ローマ字を入力...";
+"conversion.loading" = "変換中...";
 
 "movement.baseSpeed.title" = "基本速度";
 "movement.baseSpeed.detail" = "マウスモード全体のカーソル速度";
@@ -17,6 +42,7 @@
 "movement.damping.title" = "減衰";
 "movement.damping.detail" = "キー操作後にカーソル速度が落ちる速さ";
 
+"keyMapping.selfConversionToggle.title" = "自前変換オン/オフ";
 "keyMapping.enterMouseMode.title" = "マウスモードへ切替";
 "keyMapping.exitMouseMode.title" = "マウスモードを終了";
 "keyMapping.moveLeft.title" = "左へ移動";
@@ -27,6 +53,7 @@
 "keyMapping.leftClick.title" = "左クリック";
 "keyMapping.rightClick.title" = "右クリック";
 "keyMapping.middleClick.title" = "中クリック";
+"keyMapping.cursorRipple.title" = "カーソル位置を表示";
 "keyMapping.verySlow.title" = "とても遅い";
 "keyMapping.slow.title" = "遅い";
 "keyMapping.fast.title" = "速い";
@@ -38,6 +65,7 @@
 "keyMapping.undo.title" = "取り消し";
 "keyMapping.find.title" = "検索";
 
+"keyMapping.selfConversionToggle.detail" = "入力モード: Ctrl+設定キー";
 "keyMapping.enterMouseMode.detail" = "入力モード: Ctrl+キーまたは Fn+キー";
 "keyMapping.mouseMode.detail" = "マウスモード";
 "keyMapping.movement.detail" = "マウスモード移動。入力モードでは Ctrl+Shift で矢印キー";
@@ -45,3 +73,43 @@
 "keyMapping.command.detail" = "マウスモードのコマンド";
 
 "keyChoice.space" = "スペース";
+"keyChoice.kana" = "あいう";
+"keyChoice.eisu" = "ABC";
+
+"agent.menu" = "リモート操作を許可（LAN内）";
+"input.status.disabled" = "キーボード操作: 停止中";
+"input.status.running" = "キーボード操作: 利用可能";
+"input.status.accessibilityRequired" = "キーボード操作: アクセシビリティの許可が必要";
+"input.status.monitoringRequired" = "キーボード操作: 入力監視の許可が必要";
+"input.status.unavailable" = "キーボード操作: 再接続待ち";
+"input.status.secureInput" = "キーボード操作: 保護された入力の終了待ち";
+"input.reconnect" = "キーボード操作を再接続";
+"input.openAccessibility" = "アクセシビリティ設定を開く…";
+"input.openMonitoring" = "入力監視の設定を開く…";
+"agent.tab" = "Agent API";
+"agent.enabled" = "リモート操作を許可中 · ポート8766";
+"agent.disabled" = "リモート操作は無効です";
+"agent.help" = "有効にすると認証付きのAPI仕様URLが表示されます。LANのアドレスを選択してエージェントに共有してください。同じプライベートIPv4サブネット内、またはこのMacからのみ接続できます。通信は暗号化されないHTTPのため、信頼できるLANで利用してください。トークンを更新すると旧URLは直ちに無効になります。APIで押したボタンは5秒間の操作停止、無効化、トークン更新時に解放されます。";
+"agent.copy" = "URLをコピー";
+"agent.rotate" = "トークンを更新";
+"agent.keychain.prompt" = "ViMouseのLAN Agent APIトークンにアクセスするため、ログインキーチェーンの許可が必要です。";
+"settings.selfConversion.learning" = "確定した読みと単語を端末内で学習（90日・最大512件）";
+"settings.selfConversion.learning.undo" = "直前の学習を取り消す";
+"settings.selfConversion.learning.clear" = "学習履歴を削除";
+
+"settings.selfConversion.backend.local" = "ローカル変換（即時更新）";
+"settings.selfConversion.backend.server" = "サーバー変換";
+"settings.selfConversion.backend.detail" = "ローカル変換は Apple Silicon・macOS 14以降に対応し、入力ごとに候補を更新します。サーバー変換は2秒の入力待ち時間を設けます。";
+
+"settings.selfConversion.historyLimit" = "変換入力の履歴件数";
+
+"settings.selfConversion.historyDetail" = "未入力時にCtrl+Kで履歴を呼び出し、続けて押すと遡ります。既定10件。0件で保存停止・履歴削除。履歴はこの端末に保存します。";
+
+"voiceInput.preparing" = "音声入力を準備しています";
+"voiceInput.recording" = "録音中。もう一度押すと確定し、Escで取り消します。";
+"voiceInput.recognizing" = "日本語の音声を認識しています";
+"voiceInput.microphone" = "マイクが利用できません。システム設定でViMouseへのアクセスを確認してください。";
+"voiceInput.targetChanged" = "録音を開始した入力先に戻ってから、もう一度お試しください。";
+"voiceInput.model" = "このMacでは日本語の音声認識モデルを準備できませんでした。";
+"voiceInput.noSpeech" = "音声を認識できませんでした。";
+"voiceInput.failed" = "音声入力を完了できませんでした。";
